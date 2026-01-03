@@ -215,7 +215,6 @@ void showResults(const char reference[], char userInput[], int userLen, int refL
 
 
 //main function
-
 void runSpeedTest(){
     const char referenceText[] = "the quick brown fox jumps over the lazy dog";
     int refLen = getLength(referenceText);
@@ -313,5 +312,135 @@ void runSpeedTest(){
     restoreTerminal();
     clearScreen();
     cout << "Thanks for practicing!  Goodbye!" << endl;
+    
+}
+
+
+// Run speed test V2 which returrns Test Results
+TestResults runSpeedTestWithResults(){
+    const char referenceText[] = "the quick brown fox jumps over the lazy dog";
+    int refLen = getLength(referenceText);
+    
+    char userInput[500];
+    int userLen = 0;
+    
+    setTerminal();
+    
+    // Variables for results
+    TestResults results = {0, 0, 0, 0, 0};
+    int totalMistakes = 0;
+    int totalKeystrokes = 0;
+    double startTime = 0;
+    double timePassed = 0;
+    bool timerStarted = false;
+    bool keepPlaying = true;
+    
+    while (keepPlaying) {
+        // Reset for each session
+        userLen = 0;
+        userInput[0] = '\0';
+        totalMistakes = 0;
+        totalKeystrokes = 0;
+        startTime = 0;
+        timePassed = 0;
+        timerStarted = false;
+        
+        displayScreen(referenceText, userInput, userLen, refLen, 0, 0, false);
+        
+        // Typing loop
+        bool typing = true;
+        while (typing) {
+            if (timerStarted) {
+                timePassed = getCurrentTime() - startTime;
+                displayScreen(referenceText, userInput, userLen, refLen,
+                                   timePassed, totalMistakes, timerStarted);
+            }
+            
+            if (isKeyPressed()) {
+                char ch = readKey();
+                
+                if (!timerStarted && ch >= 32 && ch <= 126) {
+                    startTime = getCurrentTime();
+                    timerStarted = true;
+                }
+                
+                if (ch == '\n' || ch == '\r') {
+                    typing = false;
+                }
+                else if (ch == 127 || ch == 8) {
+                    if (userLen > 0) {
+                        userLen--;
+                        userInput[userLen] = '\0';
+                    }
+                }
+                else if (ch >= 32 && ch <= 126) {
+                    totalKeystrokes++;
+                    
+                    if (userLen < refLen) {
+                        if (ch != referenceText[userLen]) {
+                            totalMistakes++;
+                        }
+                    } else {
+                        totalMistakes++;
+                    }
+                    
+                    if (userLen < 499) {
+                        userInput[userLen] = ch;
+                        userLen++;
+                        userInput[userLen] = '\0';
+                    }
+                }
+                
+                displayScreen(referenceText, userInput, userLen, refLen,
+                                   timePassed, totalMistakes, timerStarted);
+            }
+        }
+        
+        // Final time
+        if (timePassed < 1) timePassed = 1;
+        
+        // Calculate results
+        int correct = 0;
+        int checkLen = (userLen < refLen) ? userLen : refLen;
+        
+        for (int i = 0; i < checkLen; i++) {
+            if (userInput[i] == referenceText[i]) {
+                correct++;
+            }
+        }
+        
+        // Populate results struct
+        results.time_taken = timePassed;
+        results.mistakes = totalMistakes;
+        results.keystrokes = totalKeystrokes;
+        
+        // Calculate WPM
+        results.wpm = (int)((userLen / 5.0) / (timePassed / 60.0));
+        
+        // Calculate accuracy
+        if (totalKeystrokes > 0) {
+            int correctKeys = totalKeystrokes - totalMistakes;
+            if (correctKeys < 0) correctKeys = 0;
+            results.accuracy = (correctKeys * 100) / totalKeystrokes;
+        }
+        
+        // Show results
+        showResults(referenceText, userInput, userLen, refLen,
+                   timePassed, totalMistakes, totalKeystrokes);
+        
+        // Wait for user to press a key
+        char choice = waitForKey();
+        
+        if (choice == 'q' || choice == 'Q') {
+            keepPlaying = false;
+        }
+        // 'r' will restart loop
+    }
+    
+    restoreTerminal();
+    clearScreen();
+    
+    return results;  // Return the results
+
     
 }
