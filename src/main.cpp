@@ -1,8 +1,8 @@
 #include "TerminalSetup.h"
 #include "SpeedTest.h"
 #include <iostream>
-#include "../auth/user_manager.h"
-#include "../utils/user.h"
+#include "user_manager.h"
+#include "user.h"
 #include <string>
 
 int main(){

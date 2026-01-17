@@ -2,7 +2,7 @@
 #define USER_MANAGER_H
 
 #include <string>
-#include "../utils/user.h"
+#include "user.h"
 
 class UserManager {
 private:
