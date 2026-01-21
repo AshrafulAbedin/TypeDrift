@@ -47,6 +47,8 @@ int main(){
                     if (UserManager::loginUser(user_id, password)) {
                         currentUser = UserManager::loadUser(user_id);
                         isLoggedIn = true;
+                        if(isLoggedIn) 
+                        std :: cout << "logged in\n";
                         std::cout << "\nLogin successful! Welcome " << currentUser.getName() << "!\n";
                     }
                     break;

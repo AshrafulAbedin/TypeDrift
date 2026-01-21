@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-const std::string UserManager::USERS_FILE = "data/users.txt";
+const std::string UserManager::USERS_FILE = "../data/users.txt";
 
 bool UserManager::registerUser(const std::string& name, const std::string& user_id, const std::string& password) {
     // Check if user already exists
@@ -103,6 +103,9 @@ bool UserManager::validatePassword(const std::string& password) {
 }
 
 bool UserManager::addUserToRegistry(const std::string& user_id, const std::string& name) {
+    if(!FileHandler::directoryExists("data")){
+        FileHandler::createDirectory("data");
+    }
     std::string line = user_id + ":" + name;
     return FileHandler::writeLine(USERS_FILE, line);
 }

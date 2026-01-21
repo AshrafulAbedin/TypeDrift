@@ -1,6 +1,7 @@
 #include "SpeedTest.h"
 #include "TerminalSetup.h"
 #include <iostream>
+#include <../utils/file_helper.h>
 
 using namespace std;
 
@@ -216,7 +217,8 @@ void showResults(const char reference[], char userInput[], int userLen, int refL
 
 //main function
 void runSpeedTest(){
-    const char referenceText[] = "the quick brown fox jumps over the lazy dog";
+    string text = FileHandler :: readFile("../data/texts/practice.txt");
+    const char* referenceText = text.c_str();
     int refLen = getLength(referenceText);
     
     char userInput[500];
@@ -318,7 +320,8 @@ void runSpeedTest(){
 
 // Run speed test V2 which returrns Test Results
 TestResults runSpeedTestWithResults(){
-    const char referenceText[] = "the quick brown fox jumps over the lazy dog";
+    string text = FileHandler :: readFile("../data/texts/practice.txt");
+    const char* referenceText = text.c_str();
     int refLen = getLength(referenceText);
     
     char userInput[500];

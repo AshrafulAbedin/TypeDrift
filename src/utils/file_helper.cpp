@@ -12,18 +12,19 @@
     #define MKDIR(a) mkdir(a, 0755)
 #endif
 
+
 bool FileHandler::fileExists(const std::string& filename) {
-    std::ifstream file(filename);
+    std::ifstream file(filename); // ifstream input file stream tries to read to file
     return file.good();
 }
 
 bool FileHandler::createFile(const std::string& filename) {
-    std::ofstream file(filename);
+    std::ofstream file(filename); //ofstream output file stream tries to write to file
     return file.is_open();
 }
 
 bool FileHandler::deleteFile(const std::string& filename) {
-    return std::remove(filename.c_str()) == 0;
+    return std::remove(filename.c_str()) == 0; //c_str converts string file name to char * array because remove expects a char *
 }
 
 std::string FileHandler::readFile(const std::string& filename) {
@@ -32,8 +33,8 @@ std::string FileHandler::readFile(const std::string& filename) {
         return "";
     }
     
-    std::string content((std::istreambuf_iterator<char>(file)),
-                         std::istreambuf_iterator<char>());
+    std::string content((std::istreambuf_iterator<char>(file)),//start pointer
+                         std::istreambuf_iterator<char>());//End pointer
     return content;
 }
 
@@ -88,9 +89,16 @@ bool FileHandler::createDirectory(const std::string& path) {
 
 // User-specific operations
 bool FileHandler::saveUserData(const std::string& user_id, const std::string& data) {
-    std::string user_dir = "data/users/";
+    std::string data_dir = "../data";
+    std::string user_dir = "../data/users/";
     std::string filename = user_dir + user_id + ".txt";
     
+    if(!directoryExists(data_dir)){
+        if(!createDirectory(data_dir)){
+            std ::cerr << "failed\n";
+            return false;
+        }
+    }
     // Ensure directory exists
     if (!directoryExists(user_dir)) {
         createDirectory(user_dir);
@@ -100,11 +108,11 @@ bool FileHandler::saveUserData(const std::string& user_id, const std::string& da
 }
 
 std::string FileHandler::loadUserData(const std::string& user_id) {
-    std::string filename = "data/users/" + user_id + ".txt";
+    std::string filename = "../data/users/" + user_id + ".txt";
     return readFile(filename);
 }
 
 bool FileHandler::userFileExists(const std::string& user_id) {
-    std::string filename = "data/users/" + user_id + ".txt";
+    std::string filename = "../data/users/" + user_id + ".txt";
     return fileExists(filename);
 }
