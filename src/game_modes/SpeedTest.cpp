@@ -5,7 +5,8 @@
 
 using namespace std;
 
-// Helper function to display the typing screen (not in header, only used internally)
+// Helper function to display the typing screen
+//is called in every 50ms....so 20 times in 1 second!!! :3
 void displayScreen(const char reference[], char userInput[], int userLen, int refLen,
                     double timePassed, int totalMistakes, bool timerStarted){
     
@@ -42,10 +43,10 @@ void displayScreen(const char reference[], char userInput[], int userLen, int re
             if (userInput[i] == reference[i]) {
                 cout << BRIGHT_YELLOW << userInput[i] << RESET;
             } else {
-                cout << BRIGHT_RED << BOLD << userInput[i] << RESET;
+                cout << BRIGHT_RED << BOLD << reference[i] << RESET;
             }
         } else {
-            cout << RED << userInput[i] << RESET;
+            cout << RED << reference[i] << RESET;
         }
     }
 
@@ -63,12 +64,13 @@ void displayScreen(const char reference[], char userInput[], int userLen, int re
     // Progress
     cout << endl;
     cout << "Progress: " << userLen << "/" << refLen << " characters" << endl;
+    int percent=(userLen*100)/refLen;
+    cout<<"Progress: "<< percent<<" % "<<endl;
     
     cout.flush();
 }
 
 
-// NEW: Simple, colorful results display
 void displayResults(const TestResults& results) {
     clearScreen();
     
@@ -115,11 +117,11 @@ void displayResults(const TestResults& results) {
     
     // Performance message based on WPM and accuracy
     if (results.accuracy >= 95 && results.wpm >= 60) {
-        cout << GREEN << "  Excellent! You're a typing master!" << RESET << endl;
+        cout << GREEN << "  Excellent! You can say I am speed >_<!" << RESET << endl;
     } else if (results.accuracy >= 85 && results.wpm >= 40) {
-        cout << YELLOW << "  Good job! Keep practicing!" << RESET << endl;
+        cout << YELLOW << "  Good job! Keep practicing ! ;-;" << RESET << endl;
     } else {
-        cout << CYAN << "  Keep going! Practice makes perfect!" << RESET << endl;
+        cout << CYAN << "  Keep going! You should do better -.-" << RESET << endl;
     }
     
     cout << endl;
@@ -129,9 +131,6 @@ void displayResults(const TestResults& results) {
     cout.flush();
 }
 
-
-// UNIFIED: Single function to run speed test
-// saveToUser: true = save to user profile, false = guest mode (don't save)
 TestResults runSpeedTest(bool saveToUser) {
     // Load reference text
     string text = FileHandler::readFile("../data/texts/practice.txt");
@@ -245,21 +244,18 @@ TestResults runSpeedTest(bool saveToUser) {
             results.accuracy = (correctKeys * 100) / totalKeystrokes;
         }
         
-        // Display results using the new function
         displayResults(results);
         
-        // Wait for user choice (both guest and user can retry!)
+        // Wait for user choice
         char choice = waitForKey();
         
         if (choice == 'q' || choice == 'Q') {
             keepPlaying = false;
         }
-        // If 'r' or any other key, loop continues and test restarts
     }
     
     restoreTerminal();
     clearScreen();
     
-    // Return results (will be saved only if saveToUser is true in main.cpp)
     return results;
 }
