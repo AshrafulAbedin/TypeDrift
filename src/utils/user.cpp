@@ -31,31 +31,48 @@ void User::updateStats(int wpm) {
 
 std::string User::serialize() const {
     std::ostringstream oss;
-    oss << name << "\n"
-        << user_id << "\n"
-        << password << "\n"
-        << best_wpm << "\n"
-        << total_games << "\n"
-        << std::fixed << std::setprecision(2) << avg_wpm;
+    oss << best_wpm << "||"
+        << std::fixed << std::setprecision(2) << avg_wpm << "||"
+        << total_games;
     return oss.str();
 }
 
 bool User::deserialize(const std::string& data) {
     std::istringstream iss(data);
-    
-    if (!std::getline(iss, name)) return false;
-    if (!std::getline(iss, user_id)) return false;
-    if (!std::getline(iss, password)) return false;
-    
     std::string temp;
-    if (!std::getline(iss, temp)) return false;
-    best_wpm = std::stoi(temp);
     
-    if (!std::getline(iss, temp)) return false;
-    total_games = std::stoi(temp);
+    // Get best_wpm (first token before "||")
+    if (!std::getline(iss, temp, '|')) return false;
+    try {
+        best_wpm = std::stoi(temp);
+    } catch (...) {
+        return false;
+    }
     
+    // Skip the second '|' of "||"
+    char c;
+    iss.get(c);
+    if (c != '|') return false;
+    
+    // Get avg_wpm (second token before next "||")
+    if (!std::getline(iss, temp, '|')) return false;
+    try {
+        avg_wpm = std::stof(temp);
+    } catch (...) {
+        return false;
+    }
+    
+    // Skip the second '|' of "||"
+    iss.get(c);
+    if (c != '|') return false;
+    
+    // Get total_games (remaining content)
     if (!std::getline(iss, temp)) return false;
-    avg_wpm = std::stof(temp);
+    try {
+        total_games = std::stoi(temp);
+    } catch (...) {
+        return false;
+    }
     
     return true;
 }

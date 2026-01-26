@@ -1,5 +1,2 @@
-shadow:Muhaiminul
-luimas:Samiul
-satil:Safwan
-sarkar:Saif
-garconXD:Fardin
+nefarious:Ryan:notf@ir
+TheOne:Hasan:Nopass
