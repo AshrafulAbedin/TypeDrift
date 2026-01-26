@@ -22,7 +22,7 @@ int main(){
             std::cin.ignore(); // Clear newline
             
             switch (choice) {
-                case 1: { // Register - Note the brace
+                case 1: { // Register
                     std::cout << "Enter name: ";
                     std::getline(std::cin, name);
                     std::cout << "Enter user ID: ";
@@ -38,7 +38,7 @@ int main(){
                     break;
                 }
                     
-                case 2: { // Login - Note the brace
+                case 2: { // Login
                     std::cout << "Enter user ID: ";
                     std::getline(std::cin, user_id);
                     std::cout << "Enter password: ";
@@ -47,16 +47,20 @@ int main(){
                     if (UserManager::loginUser(user_id, password)) {
                         currentUser = UserManager::loadUser(user_id);
                         isLoggedIn = true;
-                        if(isLoggedIn) 
-                        std :: cout << "logged in\n";
                         std::cout << "\nLogin successful! Welcome " << currentUser.getName() << "!\n";
                     }
                     break;
                 }
                     
-                case 3: { // Play as Guest - Note the brace
-                    std::cout << "\nPlaying as Guest...\n";
-                    runSpeedTest();
+                case 3: { // Play as Guest
+                    std::cout << "\n=== GUEST MODE ===\n";
+                    std::cout << "Playing as Guest (results won't be saved)...\n";
+                    std::cout << "Press Enter to start...";
+                    std::cin.get();
+                    
+                    // Run test, don't save (saveToUser = false)
+                    runSpeedTest(false);
+                    
                     std::cout << "\nGuest session completed.\n";
                     break;
                 }
@@ -80,31 +84,40 @@ int main(){
             std::cin.ignore();
             
             switch (choice) {
-                case 1: { // Start Typing Test - Note the brace
+                case 1: { // Start Typing Test
                     std::cout << "\nStarting typing test...\n";
+                    std::cout << "Press Enter to begin...";
+                    std::cin.get();
                     
-                    // Run test and get results
-                    TestResults results = runSpeedTestWithResults();
+                    // Run test with saveToUser = true (but we manually save)
+                    TestResults results = runSpeedTest(true);
                     
-                    // Update user stats
+                    // Update user stats with the latest results
                     currentUser.addSessionResult(results.wpm, results.accuracy);
                     
-                    // Save updated user data
+                    // Save updated user data to file
                     UserManager::saveUser(currentUser);
                     
                     // Display session summary
-                    currentUser.displaySessionSummary(results.wpm, results.accuracy);
+                    std::cout << "\n=== SESSION SUMMARY ===\n";
+                    std::cout << "Session WPM: " << results.wpm << "\n";
+                    std::cout << "Session Accuracy: " << results.accuracy << "%\n";
+                    std::cout << "Best WPM: " << currentUser.getBestWPM() << "\n";
+                    std::cout << "Average WPM: " << currentUser.getAvgWPM() << "\n";
+                    std::cout << "Total Sessions: " << currentUser.getTotalSessions() << "\n";
+                    std::cout << "Results saved!\n";
+                    std::cout << "======================\n";
                     
                     // Ask to continue
                     std::cout << "\nPress Enter to return to menu...";
-                    std::cin.ignore();
+                    std::cin.get();
                     break;
                 }
                     
                 case 2: // View Stats
                     currentUser.displayStats();
                     std::cout << "\nPress Enter to continue...";
-                    std::cin.ignore();
+                    std::cin.get();
                     break;
                     
                 case 3: // Logout

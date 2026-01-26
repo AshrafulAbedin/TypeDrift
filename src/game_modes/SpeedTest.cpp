@@ -5,6 +5,7 @@
 
 using namespace std;
 
+// Helper function to display the typing screen (not in header, only used internally)
 void displayScreen(const char reference[], char userInput[], int userLen, int refLen,
                     double timePassed, int totalMistakes, bool timerStarted){
     
@@ -50,7 +51,7 @@ void displayScreen(const char reference[], char userInput[], int userLen, int re
 
     // Cursor
     if (userLen < refLen) {
-        cout << BG_WHITE << BLACK << reference[userLen] << RESET;
+        cout << BG_MAGNETA<<BOLD << BLACK << reference[userLen] << RESET;
         cout << GRAY;
         for (int i = userLen + 1; i < refLen; i++) {
             cout << reference[i];
@@ -63,161 +64,77 @@ void displayScreen(const char reference[], char userInput[], int userLen, int re
     cout << endl;
     cout << "Progress: " << userLen << "/" << refLen << " characters" << endl;
     
-    cout. flush();
-
+    cout.flush();
 }
 
-// ============== RESULTS SCREEN - THIS WILL DEFINITELY SHOW!  ==============
-void showResults(const char reference[], char userInput[], int userLen, int refLen,
-                 double timeTaken, int totalMistakes, int totalKeystrokes) {
-    
+
+// NEW: Simple, colorful results display
+void displayResults(const TestResults& results) {
     clearScreen();
     
-    // ===== CALCULATIONS =====
-    int correct = 0;
-    int checkLen = (userLen < refLen) ? userLen : refLen;
-    
-    for (int i = 0; i < checkLen; i++) {
-        if (userInput[i] == reference[i]) {
-            correct++;
-        }
-    }
-    
-    // Final accuracy (based on final text)
-    int finalAccuracy = 0;
-    if (refLen > 0) {
-        finalAccuracy = (correct * 100) / refLen;
-    }
-    
-    // True accuracy (counts all mistakes)
-    int trueAccuracy = 0;
-    if (totalKeystrokes > 0) {
-        int correctKeys = totalKeystrokes - totalMistakes;
-        if (correctKeys < 0) correctKeys = 0;
-        trueAccuracy = (correctKeys * 100) / totalKeystrokes;
-    }
-    
-    // WPM
-    int wpm = 0;
-    if (timeTaken > 0) {
-        wpm = (int)((userLen / 5.0) / (timeTaken / 60.0));
-    }
-    
-    // Time with decimal
-    int timeSec = (int)timeTaken;
-    int timeDec = ((int)(timeTaken * 10)) % 10;
-    
-    // ===== DISPLAY RESULTS =====
-    
     cout << endl;
-    cout << BOLD << WHITE;
-    cout << "  ╔═══════════════════════════════════════╗" << endl;
-    cout << "  ║         TYPING TEST RESULTS           ║" << endl;
-    cout << "  ╚═══════════════════════════════════════╝" << endl;
-    cout << RESET << endl;
-    
-    // Reference vs User text
-    cout << "  " << WHITE << "Reference:" << RESET << endl;
-    cout << "  " << CYAN << reference << RESET << endl;
+    cout << BOLD << CYAN << "  ================================" << RESET << endl;
+    cout << BOLD << CYAN << "       TYPING TEST RESULTS       " << RESET << endl;
+    cout << BOLD << CYAN << "  ================================" << RESET << endl;
     cout << endl;
-    
-    cout << "  " << WHITE << "You typed:" << RESET << endl;
-    cout << "  ";
-    for (int i = 0; i < userLen; i++) {
-        if (i < refLen && userInput[i] == reference[i]) {
-            cout << YELLOW << userInput[i] << RESET;
-        } else {
-            cout << RED << userInput[i] << RESET;
-        }
-    }
-    cout << endl;
-    cout << endl;
-    
-    // Stats Box
-    cout << "  " << BOLD << "┌─────────────────────────────────────┐" << RESET << endl;
-    cout << "  " << BOLD << "│" << RESET << "           YOUR STATISTICS           " << BOLD << "│" << RESET << endl;
-    cout << "  " << BOLD << "├─────────────────────────────────────┤" << RESET << endl;
     
     // Time
-    cout << "  " << BOLD << "│" << RESET;
-    cout << "  ⏱  Time:           " << GREEN << BOLD << timeSec << "." << timeDec << " seconds" << RESET;
-    cout << "      " << BOLD << "│" << RESET << endl;
+    int timeSec = (int)results.time_taken;
+    int timeDec = ((int)(results.time_taken * 10)) % 10;
+    cout << "  " << WHITE << "Time:        " << RESET << GREEN << timeSec << "." << timeDec << " seconds" << RESET << endl;
     
-    // WPM
-    cout << "  " << BOLD << "│" << RESET;
-    cout << "  ⌨  WPM:            " << YELLOW << BOLD << wpm << RESET;
-    cout << "                  " << BOLD << "│" << RESET << endl;
+    // WPM with color based on performance
+    cout << "  " << WHITE << "Speed:       " << RESET;
+    if (results.wpm >= 60) cout << GREEN << BOLD;
+    else if (results.wpm >= 40) cout << YELLOW;
+    else cout << RED;
+    cout << results.wpm << " WPM" << RESET << endl;
     
-    // Final Accuracy
-    cout << "  " << BOLD << "│" << RESET;
-    cout << "  ✓  Final Accuracy: ";
-    if (finalAccuracy >= 95) cout << GREEN << BOLD;
-    else if (finalAccuracy >= 80) cout << YELLOW << BOLD;
-    else cout << RED << BOLD;
-    cout << finalAccuracy << "%" << RESET;
-    cout << "                 " << BOLD << "│" << RESET << endl;
+    // Accuracy with color
+    cout << "  " << WHITE << "Accuracy:    " << RESET;
+    if (results.accuracy >= 95) cout << GREEN << BOLD;
+    else if (results.accuracy >= 80) cout << YELLOW;
+    else cout << RED;
+    cout << results.accuracy << "%" << RESET << endl;
     
-    // True Accuracy
-    cout << "  " << BOLD << "│" << RESET;
-    cout << "  ★  True Accuracy:  ";
-    if (trueAccuracy >= 95) cout << GREEN << BOLD;
-    else if (trueAccuracy >= 80) cout << YELLOW << BOLD;
-    else cout << RED << BOLD;
-    cout << trueAccuracy << "%" << RESET;
-    cout << "                 " << BOLD << "│" << RESET << endl;
+    // Characters
+    cout << "  " << WHITE << "Characters:  " << RESET << CYAN << results.correct_chars << "/" << results.total_chars << RESET << endl;
     
-    // Correct chars
-    cout << "  " << BOLD << "│" << RESET;
-    cout << "  📝 Correct:        " << GREEN << correct << "/" << refLen << " chars" << RESET;
-    cout << "           " << BOLD << "│" << RESET << endl;
-    
-    // Total keystrokes
-    cout << "  " << BOLD << "│" << RESET;
-    cout << "  🔢 Keystrokes:     " << WHITE << totalKeystrokes << RESET;
-    cout << "                  " << BOLD << "│" << RESET << endl;
+    // Keystrokes
+    cout << "  " << WHITE << "Keystrokes:  " << RESET << WHITE << results.keystrokes << RESET << endl;
     
     // Mistakes
-    cout << "  " << BOLD << "│" << RESET;
-    cout << "  ✗  Mistakes:       " << RED << totalMistakes << RESET;
-    cout << "                  " << BOLD << "│" << RESET << endl;
-    
-    cout << "  " << BOLD << "└─────────────────────────────────────┘" << RESET << endl;
+    cout << "  " << WHITE << "Mistakes:    " << RESET;
+    if (results.mistakes == 0) cout << GREEN << "0 (Perfect!)" << RESET;
+    else cout << RED << results.mistakes << RESET;
     cout << endl;
     
-    // Explanation
-    cout << "  " << GRAY << "Final Accuracy = Your final text vs reference" << RESET << endl;
-    cout << "  " << GRAY << "True Accuracy  = Counts all mistakes (even corrected)" << RESET << endl;
+    cout << endl;
+    cout << BOLD << CYAN << "  ================================" << RESET << endl;
     cout << endl;
     
-    // Mistakes detail
-    cout << "  " << WHITE << "Mistakes in final text: " << RESET;
-    bool hasMistake = false;
-    for (int i = 0; i < checkLen; i++) {
-        if (userInput[i] != reference[i]) {
-            cout << "'" << reference[i] << "'->'" << userInput[i] << "' ";
-            hasMistake = true;
-        }
-    }
-    if (! hasMistake) {
-        cout << GREEN << "None!  Perfect!" << RESET;
-    }
-    cout << endl;
-    
-    if (totalMistakes > 0 && !hasMistake) {
-        cout << "  " << GRAY << "(You corrected " << totalMistakes << " mistake(s) with backspace)" << RESET << endl;
+    // Performance message based on WPM and accuracy
+    if (results.accuracy >= 95 && results.wpm >= 60) {
+        cout << GREEN << "  Excellent! You're a typing master!" << RESET << endl;
+    } else if (results.accuracy >= 85 && results.wpm >= 40) {
+        cout << YELLOW << "  Good job! Keep practicing!" << RESET << endl;
+    } else {
+        cout << CYAN << "  Keep going! Practice makes perfect!" << RESET << endl;
     }
     
     cout << endl;
-    cout << "  " << BOLD << WHITE << "═══════════════════════════════════════" << RESET << endl;
+    cout << "  " << GRAY << "Press " << YELLOW << "'r'" << GRAY << " to retry or " << YELLOW << "'q'" << GRAY << " to quit" << RESET << endl;
     cout << endl;
-    cout << "  " << WHITE << "Press " << YELLOW << "'r'" << WHITE << " to retry or " << YELLOW << "'q'" << WHITE << " to quit: " << RESET;
-    cout. flush();
+    
+    cout.flush();
 }
 
 
-//main function
-void runSpeedTest(){
-    string text = FileHandler :: readFile("../data/texts/practice.txt");
+// UNIFIED: Single function to run speed test
+// saveToUser: true = save to user profile, false = guest mode (don't save)
+TestResults runSpeedTest(bool saveToUser) {
+    // Load reference text
+    string text = FileHandler::readFile("../data/texts/practice.txt");
     const char* referenceText = text.c_str();
     int refLen = getLength(referenceText);
     
@@ -226,10 +143,11 @@ void runSpeedTest(){
     
     setTerminal();
     
+    TestResults results = {0, 0, 0.0, 0, 0, 0, 0};
     bool keepPlaying = true;
     
     while (keepPlaying) {
-        // Reset
+        // Reset for each session
         userLen = 0;
         userInput[0] = '\0';
         int totalMistakes = 0;
@@ -255,7 +173,7 @@ void runSpeedTest(){
                 char ch = readKey();
                 
                 // Start timer on first printable char
-                if (! timerStarted && ch >= 32 && ch <= 126) {
+                if (!timerStarted && ch >= 32 && ch <= 126) {
                     startTime = getCurrentTime();
                     timerStarted = true;
                 }
@@ -295,111 +213,7 @@ void runSpeedTest(){
             }
         }
         
-        // Final time
-        if (timePassed < 1) timePassed = 1;
-        
-        // ===== SHOW RESULTS!  =====
-        showResults(referenceText, userInput, userLen, refLen,
-                   timePassed, totalMistakes, totalKeystrokes);
-        
-        // Wait for user to press a key
-        char choice = waitForKey();
-        
-        if (choice == 'q' || choice == 'Q') {
-            keepPlaying = false;
-        }
-        // Otherwise (including 'r'), restart
-    }
-    
-    restoreTerminal();
-    clearScreen();
-    cout << "Thanks for practicing!  Goodbye!" << endl;
-    
-}
-
-
-// Run speed test V2 which returrns Test Results
-TestResults runSpeedTestWithResults(){
-    string text = FileHandler :: readFile("../data/texts/practice.txt");
-    const char* referenceText = text.c_str();
-    int refLen = getLength(referenceText);
-    
-    char userInput[500];
-    int userLen = 0;
-    
-    setTerminal();
-    
-    // Variables for results
-    TestResults results = {0, 0, 0, 0, 0};
-    int totalMistakes = 0;
-    int totalKeystrokes = 0;
-    double startTime = 0;
-    double timePassed = 0;
-    bool timerStarted = false;
-    bool keepPlaying = true;
-    
-    while (keepPlaying) {
-        // Reset for each session
-        userLen = 0;
-        userInput[0] = '\0';
-        totalMistakes = 0;
-        totalKeystrokes = 0;
-        startTime = 0;
-        timePassed = 0;
-        timerStarted = false;
-        
-        displayScreen(referenceText, userInput, userLen, refLen, 0, 0, false);
-        
-        // Typing loop
-        bool typing = true;
-        while (typing) {
-            if (timerStarted) {
-                timePassed = getCurrentTime() - startTime;
-                displayScreen(referenceText, userInput, userLen, refLen,
-                                   timePassed, totalMistakes, timerStarted);
-            }
-            
-            if (isKeyPressed()) {
-                char ch = readKey();
-                
-                if (!timerStarted && ch >= 32 && ch <= 126) {
-                    startTime = getCurrentTime();
-                    timerStarted = true;
-                }
-                
-                if (ch == '\n' || ch == '\r') {
-                    typing = false;
-                }
-                else if (ch == 127 || ch == 8) {
-                    if (userLen > 0) {
-                        userLen--;
-                        userInput[userLen] = '\0';
-                    }
-                }
-                else if (ch >= 32 && ch <= 126) {
-                    totalKeystrokes++;
-                    
-                    if (userLen < refLen) {
-                        if (ch != referenceText[userLen]) {
-                            totalMistakes++;
-                        }
-                    } else {
-                        totalMistakes++;
-                    }
-                    
-                    if (userLen < 499) {
-                        userInput[userLen] = ch;
-                        userLen++;
-                        userInput[userLen] = '\0';
-                    }
-                }
-                
-                displayScreen(referenceText, userInput, userLen, refLen,
-                                   timePassed, totalMistakes, timerStarted);
-            }
-        }
-        
-        // Final time
+        // Ensure minimum time
         if (timePassed < 1) timePassed = 1;
         
         // Calculate results
@@ -416,9 +230,13 @@ TestResults runSpeedTestWithResults(){
         results.time_taken = timePassed;
         results.mistakes = totalMistakes;
         results.keystrokes = totalKeystrokes;
+        results.correct_chars = correct;
+        results.total_chars = refLen;
         
         // Calculate WPM
-        results.wpm = (int)((userLen / 5.0) / (timePassed / 60.0));
+        if (timePassed > 0) {
+            results.wpm = (int)((userLen / 5.0) / (timePassed / 60.0));
+        }
         
         // Calculate accuracy
         if (totalKeystrokes > 0) {
@@ -427,23 +245,21 @@ TestResults runSpeedTestWithResults(){
             results.accuracy = (correctKeys * 100) / totalKeystrokes;
         }
         
-        // Show results
-        showResults(referenceText, userInput, userLen, refLen,
-                   timePassed, totalMistakes, totalKeystrokes);
+        // Display results using the new function
+        displayResults(results);
         
-        // Wait for user to press a key
+        // Wait for user choice (both guest and user can retry!)
         char choice = waitForKey();
         
         if (choice == 'q' || choice == 'Q') {
             keepPlaying = false;
         }
-        // 'r' will restart loop
+        // If 'r' or any other key, loop continues and test restarts
     }
     
     restoreTerminal();
     clearScreen();
     
-    return results;  // Return the results
-
-    
+    // Return results (will be saved only if saveToUser is true in main.cpp)
+    return results;
 }

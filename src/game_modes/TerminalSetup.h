@@ -12,6 +12,7 @@
 #define WHITE       "\033[97m"
 #define BG_WHITE    "\033[47m"
 #define BLACK       "\033[30m"
+#define BG_MAGNETA  "\033[45m"
 
 //FUNCTION DECLARATIONS  
 void setTerminal(); //set up terminal to take single characters as fast input
