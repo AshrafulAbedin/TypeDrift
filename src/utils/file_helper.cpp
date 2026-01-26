@@ -116,3 +116,49 @@ bool FileHandler::userFileExists(const std::string& user_id) {
     std::string filename = "../data/users/" + user_id + ".txt";
     return fileExists(filename);
 }
+
+std::string FileHandler::findUserPasswordInRegistry(const std::string& user_id) {
+    auto lines = FileHandler::readLines("../data/users.txt");
+    
+    for (const auto& line : lines) {
+        size_t first_colon = line.find(':');
+        if (first_colon == std::string::npos) continue;
+        
+        size_t second_colon = line.find(':', first_colon + 1);
+        if (second_colon == std::string::npos) continue;
+        
+        std::string stored_id = line.substr(0, first_colon);
+        
+        if (stored_id == user_id) {
+            // Extract password (after second colon)
+            std::string password = line.substr(second_colon + 1);
+            return password;
+        }
+    }
+    
+    return "";
+}
+std::string FileHandler::getUserNameFromRegistry(const std::string& user_id) {
+    auto lines = FileHandler::readLines("../data/users.txt");
+    
+    for (const auto& line : lines) {
+        // Find first colon (between user_id and name)
+        size_t first_colon = line.find(':');
+        if (first_colon == std::string::npos) continue;
+        
+        // Find second colon (between name and password)
+        size_t second_colon = line.find(':', first_colon + 1);
+        if (second_colon == std::string::npos) continue;
+        
+        // Extract user_id (before first colon)
+        std::string stored_id = line.substr(0, first_colon);
+        
+        if (stored_id == user_id) {
+            // Extract name (between first and second colon)
+            std::string name = line.substr(first_colon + 1, second_colon - (first_colon + 1));
+            return name;
+        }
+    }
+    
+    return "";
+}

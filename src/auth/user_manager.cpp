@@ -6,34 +6,19 @@
 const std::string UserManager::USERS_FILE = "../data/users.txt";
 
 bool UserManager::registerUser(const std::string& name, const std::string& user_id, const std::string& password) {
-    // Check if user already exists
-    if (userExists(user_id)) {
-        std::cout << "User ID already exists. Please choose another.\n";
-        return false;
-    }
-    
-    // Validate inputs
-    if (!validateUserId(user_id)) {
-        std::cout << "Invalid user ID. Must be 3-20 characters, letters, numbers, and underscores only.\n";
-        return false;
-    }
-    
-    if (!validatePassword(password)) {
-        std::cout << "Invalid password. Must be at least 6 characters.\n";
-        return false;
-    }
+    // ... validation code ...
     
     // Create new instance of a user
     User newUser(name, user_id, password);
     
-    // Save user data to individual file
+    // Save user stats to individual file (serialize only stats)
     if (!saveUser(newUser)) {
-        std::cout << "Failed to save user data.\n"; //Catch error
+        std::cout << "Failed to save user data.\n";
         return false;
     }
     
-    // Add to registry
-    if (!addUserToRegistry(user_id, name)) {
+    // Add to registry (users.txt)
+    if (!addUserToRegistry(user_id, name, password)) {
         std::cout << "Failed to register user in system.\n";
         return false;
     }
@@ -68,14 +53,29 @@ bool UserManager::userExists(const std::string& user_id) {
 }
 
 bool UserManager::saveUser(const User& user) {
+    // Only serialize stats (not name, id, password)
     std::string data = user.serialize();
     return FileHandler::saveUserData(user.getUserId(), data);
 }
 
 User UserManager::loadUser(const std::string& user_id) {
     User user;
-    std::string data = FileHandler::loadUserData(user_id);
     
+    // First, get the user's name and password from the registry
+    std::string password = FileHandler::findUserPasswordInRegistry(user_id);
+    if (password.empty()) {
+        std::cout << "User not found in registry.\n";
+        return user; // Return empty user
+    }
+    
+    // Get the name from registry too
+    std::string name = FileHandler::getUserNameFromRegistry(user_id);
+    
+    // Now create the user with basic info
+    user = User(name, user_id, password);
+    
+    // Load stats from individual user file
+    std::string data = FileHandler::loadUserData(user_id);
     if (!data.empty()) {
         user.deserialize(data);
     }
@@ -89,40 +89,24 @@ bool UserManager::validateUserId(const std::string& user_id) {
         return false;
     }
     
-    // Check characters (alphanumeric and underscore only)
-    for(char c : user_id){
-        if (!((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')) && c != '_')
-        return false;
-    }
+    // Check characters (alphanumeric and special characters only)
+    // for(char c : user_id){
+    //     if ()
+    //     return false;
+    // }
     
     return true;
 }
 
 bool UserManager::validatePassword(const std::string& password) {
-    return password.length() >= 6;
+    return password.length() >= 6 || password.length() <= 20;
 }
 
-bool UserManager::addUserToRegistry(const std::string& user_id, const std::string& name) {
+bool UserManager::addUserToRegistry(const std::string& user_id, const std::string& name, const std::string& password) {
     if(!FileHandler::directoryExists("data")){
         FileHandler::createDirectory("data");
     }
-    std::string line = user_id + ":" + name;
+    std::string line = user_id + ":" + name + ":" + password;
     return FileHandler::writeLine(USERS_FILE, line);
 }
 
-bool UserManager::findUserInRegistry(const std::string& user_id, std::string& name) {
-    auto lines = FileHandler::readLines(USERS_FILE);
-    
-    for (const auto& line : lines) { //taking line by line
-        size_t pos = line.find(':'); //finding : so we can take the user_id, pos stores the position of :
-        if (pos != std::string::npos) { //if there is user_id and file is not empty(npos)
-            std::string stored_id = line.substr(0, pos); //take the sub-string upto pos
-            if (stored_id == user_id) { //user found
-                name = line.substr(pos + 1); //update the name
-                return true;
-            }
-        }
-    }
-    
-    return false;
-}

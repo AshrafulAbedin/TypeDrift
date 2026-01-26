@@ -28,6 +28,8 @@ public:
     static bool saveUserData(const std::string& user_id, const std::string& data);
     static std::string loadUserData(const std::string& user_id);
     static bool userFileExists(const std::string& user_id);
+    static std::string findUserPasswordInRegistry(const std::string& user_id); 
+    static std::string getUserNameFromRegistry(const std::string& user_id);
 };
 
 #endif // FILE_HANDLER_H

@@ -1,4 +1,2 @@
-Shadow:Muhaiminul
-luimas:Samiul
-Gandu:Safwan
-sarkar:saif
+nefarious:Ryan:notf@ir
+TheOne:Hasan:Nopass

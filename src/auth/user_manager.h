@@ -21,8 +21,8 @@ public:
     static bool validatePassword(const std::string& password);
     
 private:
-    static bool addUserToRegistry(const std::string& user_id, const std::string& name);
-    static bool findUserInRegistry(const std::string& user_id, std::string& name);
+    static bool addUserToRegistry(const std::string& user_id, const std::string& name, const std::string& password);
+    //static bool findUserInRegistry(const std::string& user_id, std::string& name, std::string& password);
 };
 
 #endif // USER_MANAGER_H
