@@ -6,8 +6,9 @@
 #include <string>
 
 int main(){
+    std:: cout<< BG_BRIGHT_RED;
     std::cout << "=== TYPING SPEED TEST APPLICATION ===\n\n";
-    
+    std::cout <<RESET;
     int choice;
     std::string name, user_id, password;
     User currentUser;
@@ -15,9 +16,13 @@ int main(){
     
     while (true) {
         if (!isLoggedIn) {
+            std::cout<<BG_BRIGHT_MAGENTA<<BRIGHT_YELLOW;
             std::cout << "\n=== MAIN MENU ===\n";
+            std::cout << RESET;
+            std::cout << CYAN;
             std::cout << "1. Register\n2. Login\n3. Play as Guest\n4. Exit\n";
             std::cout << "Choice: ";
+            std::cout << RESET;
             std::cin >> choice;
             std::cin.ignore(); // Clear newline
             

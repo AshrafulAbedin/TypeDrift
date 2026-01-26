@@ -40,9 +40,9 @@ void displayScreen(const char reference[], char userInput[], int userLen, int re
     for (int i = 0; i < userLen; i++) {
         if (i < refLen) {
             if (userInput[i] == reference[i]) {
-                cout << YELLOW << userInput[i] << RESET;
+                cout << BRIGHT_YELLOW << userInput[i] << RESET;
             } else {
-                cout << RED << BOLD << userInput[i] << RESET;
+                cout << BRIGHT_RED << BOLD << userInput[i] << RESET;
             }
         } else {
             cout << RED << userInput[i] << RESET;
@@ -51,7 +51,7 @@ void displayScreen(const char reference[], char userInput[], int userLen, int re
 
     // Cursor
     if (userLen < refLen) {
-        cout << BG_MAGNETA<<BOLD << BLACK << reference[userLen] << RESET;
+        cout << BG_BRIGHT_MAGENTA<<BOLD << BLACK << reference[userLen] << RESET;
         cout << GRAY;
         for (int i = userLen + 1; i < refLen; i++) {
             cout << reference[i];
