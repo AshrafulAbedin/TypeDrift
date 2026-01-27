@@ -132,13 +132,7 @@ void displayResults(const TestResults& results) {
 }
 
 TestResults runSpeedTest(bool saveToUser) {
-    // Load reference text
-    string text = FileHandler::readFile("../data/texts/practice.txt");
-    const char* referenceText = text.c_str();
-    int refLen = getLength(referenceText);
-    
-    char userInput[500];
-    int userLen = 0;
+
     
     setTerminal();
     
@@ -146,6 +140,35 @@ TestResults runSpeedTest(bool saveToUser) {
     bool keepPlaying = true;
     
     while (keepPlaying) {
+
+        /*geting the current time and doing a mod 10 to get values 0-9
+    then creating a memory location to append the number
+    adding the asci value with the file number to get the string of the digit*/
+    long current_time=(long)getCurrentTime();
+    std::cout << "Trying to open " << std::endl;
+    int fileindex=current_time % 10;
+    char filename[50];
+    const char base_text[] ="../data/texts/practice";
+    int i=0;
+    while(base_text[i] !='\0'){
+        filename[i]=base_text[i];
+        i++;
+    }
+    filename[i++] ='0' + fileindex;
+    filename[i++] = '.';
+    filename[i++] = 't';
+    filename[i++] = 'x';
+    filename[i++] = 't';
+    filename[i]='\0';
+
+    // Load reference text
+    string text = FileHandler::readFile(filename);
+    const char* referenceText = text.c_str();
+    int refLen = getLength(referenceText);
+    
+    char userInput[500];
+    int userLen = 0;
+        
         // Reset for each session
         userLen = 0;
         userInput[0] = '\0';
