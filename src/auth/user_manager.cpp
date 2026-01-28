@@ -53,7 +53,7 @@ bool UserManager::loginUser(const std::string& user_id, const std::string& passw
         return false;
     }
     
-    std::cout << "Login successful! Welcome " << decryptString(user_name) << "!\n";
+    //std::cout << "Login successful! Welcome " << decryptString(user_name) << "!\n";
     //user.displayStats();
     return true;
 }
