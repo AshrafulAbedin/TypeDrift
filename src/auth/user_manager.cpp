@@ -1,5 +1,6 @@
 #include "user_manager.h"
 #include "file_helper.h"
+#include "TerminalSetup.h"
 #include <iostream>
 #include <hashing.h>
 
@@ -16,6 +17,30 @@ bool UserManager::registerUser(const std::string& name, const std::string& user_
     std::string encryptedName = encryptString(padString(name, 23));
     std::string encryptedUserID = encryptString(padString(user_id, 23));
     std::string encryptedPassword = encryptString(padString(password, 23));
+    
+    //Check if user_id already exists
+    if (userExists(encryptedUserID)) {
+        std::cout<<CLEAR_SCREEN;
+        std::cout<<"\n";
+        std::cout << "User already  exists.\n";
+        return false;
+    }
+    if(!validateUserId(user_id)){
+        std::cout<<CLEAR_SCREEN;
+        std::cout<<"\n";
+        std::cout<<BRIGHT_RED<<BOLD;
+        std::cout << "User ID must be between 3 and 20 characters.\n";
+        std::cout<<RESET;
+        return false;
+    }
+     if(!validatePassword(password)){
+        std::cout<<CLEAR_SCREEN;
+        std::cout<<"\n";
+        std::cout<<BRIGHT_RED<<BOLD;
+        std::cout << "Password  must be between 6 and 20 characters.\n";
+        std::cout<<RESET;
+        return false;
+    }
     newUser.setUserId(encryptedUserID);
     // Save user stats to individual file (serialize only stats)
     if (!saveUser(newUser)) {
@@ -112,7 +137,7 @@ bool UserManager::validateUserId(const std::string& user_id) {
 }
 
 bool UserManager::validatePassword(const std::string& password) {
-    return password.length() >= 6 || password.length() <= 20;
+    return password.length() >= 6 && password.length() <= 20;
 }
 
 bool UserManager::addUserToRegistry(const std::string& user_id, const std::string& name, const std::string& password) {

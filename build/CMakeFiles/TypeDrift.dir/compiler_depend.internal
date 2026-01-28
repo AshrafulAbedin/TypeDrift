@@ -157,6 +157,7 @@ CMakeFiles/TypeDrift.dir/src/auth/user_manager.cpp.o
  /home/luimas834/Project/TypeDrift/src/auth/user_manager.cpp
  /home/luimas834/Project/TypeDrift/src/auth/hashing.h
  /home/luimas834/Project/TypeDrift/src/auth/user_manager.h
+ /home/luimas834/Project/TypeDrift/src/game_modes/TerminalSetup.h
  /home/luimas834/Project/TypeDrift/src/utils/file_helper.h
  /home/luimas834/Project/TypeDrift/src/utils/user.h
  /usr/include/alloca.h
