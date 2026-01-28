@@ -2,6 +2,7 @@
 #define TerminalSetup_H
 
 //ANSII COLOR CODES
+#define CLEAR_SCREEN    "\033[2J\033[H"
 #define RESET           "\033[0m"
 #define RED             "\033[31m"
 #define YELLOW          "\033[33m"

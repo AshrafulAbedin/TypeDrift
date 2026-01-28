@@ -7,9 +7,12 @@
 #include <file_helper.h>
 #include <hashing.h>
 int main(){
-    std:: cout<< BG_BRIGHT_RED;
-    std::cout << "=== TYPING SPEED TEST APPLICATION ===\n\n";
+    std::cout<<CLEAR_SCREEN;
+    std::cout<<"\n";
+    std:: cout<< BG_BRIGHT_RED<<BRIGHT_WHITE;
+    std::cout << "              === TYPING SPEED TEST APPLICATION ===                                  \n";
     std::cout <<RESET;
+    std::cout<<"\n";
     int choice;
     std::string name, user_id, password;
     User currentUser;
@@ -17,11 +20,13 @@ int main(){
     
     while (true) {
         if (!isLoggedIn) {
-            std::cout<<BG_BRIGHT_MAGENTA<<BRIGHT_YELLOW;
-            std::cout << "\n=== MAIN MENU ===\n";
+            std::cout<<BRIGHT_MAGENTA;
+            std::cout << "\n            === MAIN MENU ===\n";
             std::cout << RESET;
             std::cout << CYAN;
             std::cout << "1. Register\n2. Login\n3. Play as Guest\n4. Exit\n";
+            std::cout<<RESET;
+            std::cout<<ITALIC<<BRIGHT_YELLOW<<BOLD;
             std::cout << "Choice: ";
             std::cout << RESET;
             std::cin >> choice;
@@ -45,6 +50,7 @@ int main(){
                         currentUser.setUserId(encryptedUserId);
                         
                         isLoggedIn = true;
+                        std::cout << "\033[2J\033[H";
                         std::cout << "\nRegistration successful! Logged in as " << user_id << "\n";
                     }
                     break;
@@ -66,6 +72,7 @@ int main(){
                         
                         std::string user_name = FileHandler::getUserNameFromRegistry(encryptedUserId);
                         isLoggedIn = true;
+                        std::cout << "\033[2J\033[H";
                         std::cout << "\nLogin successful! Welcome " << decryptString(user_name) << "!\n";
                     }
                     break;

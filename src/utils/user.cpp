@@ -105,7 +105,7 @@ void User::displaySessionSummary(int wpm, int accuracy) const {
     std::cout << "Current Session Accuracy: " << accuracy << "%\n";
     std::cout << "Best WPM: " << best_wpm << "\n";
     std::cout << "Average WPM: " << avg_wpm << "\n";
-    std::cout << "Total Sessions: " << total_sessions << "\n";
+    std::cout << "Total Sessions: " << total_games<< "\n";
     std::cout << "=====================\n";
 }
 
@@ -120,7 +120,8 @@ int User::getAverageWPM() const {
 void User::displayStats() const {
     std::cout << "\n=== User Stats ===\n";
     //std::cout << "Name: " << name << "\n";
-    std::cout << "User ID: " << user_id << "\n";
+    HASHING_H::initCharMap();
+    std::cout << "User ID: " << decryptString(user_id) << "\n";
     std::cout << "Best WPM: " << best_wpm << "\n";
     std::cout << "Total Games: " << total_games << "\n";
     std::cout << "Average WPM: " << std::fixed << std::setprecision(2) << avg_wpm << "\n";
