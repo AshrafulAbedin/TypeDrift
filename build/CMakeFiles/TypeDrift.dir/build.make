@@ -100,10 +100,24 @@ CMakeFiles/TypeDrift.dir/src/auth/user_manager.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/TypeDrift.dir/src/auth/user_manager.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/muhaiminul/Desktop/Projects/TypeDrift/src/auth/user_manager.cpp -o CMakeFiles/TypeDrift.dir/src/auth/user_manager.cpp.s
 
+CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.o: CMakeFiles/TypeDrift.dir/flags.make
+CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.o: /home/muhaiminul/Desktop/Projects/TypeDrift/src/auth/hashing.cpp
+CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.o: CMakeFiles/TypeDrift.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/muhaiminul/Desktop/Projects/TypeDrift/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.o -MF CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.o.d -o CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.o -c /home/muhaiminul/Desktop/Projects/TypeDrift/src/auth/hashing.cpp
+
+CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/muhaiminul/Desktop/Projects/TypeDrift/src/auth/hashing.cpp > CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.i
+
+CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/muhaiminul/Desktop/Projects/TypeDrift/src/auth/hashing.cpp -o CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.s
+
 CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.o: CMakeFiles/TypeDrift.dir/flags.make
 CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.o: /home/muhaiminul/Desktop/Projects/TypeDrift/src/game_modes/SpeedTest.cpp
 CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.o: CMakeFiles/TypeDrift.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/muhaiminul/Desktop/Projects/TypeDrift/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/muhaiminul/Desktop/Projects/TypeDrift/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.o -MF CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.o.d -o CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.o -c /home/muhaiminul/Desktop/Projects/TypeDrift/src/game_modes/SpeedTest.cpp
 
 CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.i: cmake_force
@@ -117,7 +131,7 @@ CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.s: cmake_force
 CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.o: CMakeFiles/TypeDrift.dir/flags.make
 CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.o: /home/muhaiminul/Desktop/Projects/TypeDrift/src/game_modes/TerminalSetup.cpp
 CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.o: CMakeFiles/TypeDrift.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/muhaiminul/Desktop/Projects/TypeDrift/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/muhaiminul/Desktop/Projects/TypeDrift/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.o -MF CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.o.d -o CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.o -c /home/muhaiminul/Desktop/Projects/TypeDrift/src/game_modes/TerminalSetup.cpp
 
 CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.i: cmake_force
@@ -131,7 +145,7 @@ CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.s: cmake_force
 CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o: CMakeFiles/TypeDrift.dir/flags.make
 CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o: /home/muhaiminul/Desktop/Projects/TypeDrift/src/utils/user.cpp
 CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o: CMakeFiles/TypeDrift.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/muhaiminul/Desktop/Projects/TypeDrift/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/muhaiminul/Desktop/Projects/TypeDrift/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o -MF CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o.d -o CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o -c /home/muhaiminul/Desktop/Projects/TypeDrift/src/utils/user.cpp
 
 CMakeFiles/TypeDrift.dir/src/utils/user.cpp.i: cmake_force
@@ -145,7 +159,7 @@ CMakeFiles/TypeDrift.dir/src/utils/user.cpp.s: cmake_force
 CMakeFiles/TypeDrift.dir/src/utils/file_helper.cpp.o: CMakeFiles/TypeDrift.dir/flags.make
 CMakeFiles/TypeDrift.dir/src/utils/file_helper.cpp.o: /home/muhaiminul/Desktop/Projects/TypeDrift/src/utils/file_helper.cpp
 CMakeFiles/TypeDrift.dir/src/utils/file_helper.cpp.o: CMakeFiles/TypeDrift.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/muhaiminul/Desktop/Projects/TypeDrift/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/TypeDrift.dir/src/utils/file_helper.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/muhaiminul/Desktop/Projects/TypeDrift/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/TypeDrift.dir/src/utils/file_helper.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/TypeDrift.dir/src/utils/file_helper.cpp.o -MF CMakeFiles/TypeDrift.dir/src/utils/file_helper.cpp.o.d -o CMakeFiles/TypeDrift.dir/src/utils/file_helper.cpp.o -c /home/muhaiminul/Desktop/Projects/TypeDrift/src/utils/file_helper.cpp
 
 CMakeFiles/TypeDrift.dir/src/utils/file_helper.cpp.i: cmake_force
@@ -160,6 +174,7 @@ CMakeFiles/TypeDrift.dir/src/utils/file_helper.cpp.s: cmake_force
 TypeDrift_OBJECTS = \
 "CMakeFiles/TypeDrift.dir/src/main.cpp.o" \
 "CMakeFiles/TypeDrift.dir/src/auth/user_manager.cpp.o" \
+"CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.o" \
 "CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.o" \
 "CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.o" \
 "CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o" \
@@ -170,6 +185,7 @@ TypeDrift_EXTERNAL_OBJECTS =
 
 TypeDrift: CMakeFiles/TypeDrift.dir/src/main.cpp.o
 TypeDrift: CMakeFiles/TypeDrift.dir/src/auth/user_manager.cpp.o
+TypeDrift: CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.o
 TypeDrift: CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.o
 TypeDrift: CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.o
 TypeDrift: CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o
@@ -177,7 +193,7 @@ TypeDrift: CMakeFiles/TypeDrift.dir/src/utils/file_helper.cpp.o
 TypeDrift: CMakeFiles/TypeDrift.dir/build.make
 TypeDrift: CMakeFiles/TypeDrift.dir/compiler_depend.ts
 TypeDrift: CMakeFiles/TypeDrift.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/muhaiminul/Desktop/Projects/TypeDrift/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable TypeDrift"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/muhaiminul/Desktop/Projects/TypeDrift/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable TypeDrift"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/TypeDrift.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

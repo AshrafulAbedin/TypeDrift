@@ -129,6 +129,30 @@ TypeDrift/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/build
 .PHONY : TypeDrift/fast
 
+src/auth/hashing.o: src/auth/hashing.cpp.o
+.PHONY : src/auth/hashing.o
+
+# target to build an object file
+src/auth/hashing.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.o
+.PHONY : src/auth/hashing.cpp.o
+
+src/auth/hashing.i: src/auth/hashing.cpp.i
+.PHONY : src/auth/hashing.i
+
+# target to preprocess a source file
+src/auth/hashing.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.i
+.PHONY : src/auth/hashing.cpp.i
+
+src/auth/hashing.s: src/auth/hashing.cpp.s
+.PHONY : src/auth/hashing.s
+
+# target to generate assembly for a file
+src/auth/hashing.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.s
+.PHONY : src/auth/hashing.cpp.s
+
 src/auth/user_manager.o: src/auth/user_manager.cpp.o
 .PHONY : src/auth/user_manager.o
 
@@ -282,6 +306,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... TypeDrift"
+	@echo "... src/auth/hashing.o"
+	@echo "... src/auth/hashing.i"
+	@echo "... src/auth/hashing.s"
 	@echo "... src/auth/user_manager.o"
 	@echo "... src/auth/user_manager.i"
 	@echo "... src/auth/user_manager.s"

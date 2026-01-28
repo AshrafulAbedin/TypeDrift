@@ -4,10 +4,10 @@
 #include <string>
 
 class User {
-private:
+ private:
     std::string name;
     std::string user_id;
-    std::string password;
+//     std::string password;
     int total_sessions;  
     int total_wpm;
     int best_wpm;
@@ -17,12 +17,12 @@ private:
 public:
     // Constructors
     User();
-    User(const std::string& name, const std::string& user_id, const std::string& password);
+    //User(const std::string& name, const std::string& user_id, const std::string& password);
     
     // Getters
-    std::string getName() const;
-    std::string getUserId() const;
-    std::string getPassword() const;
+ //    std::string getName() const;
+     std::string getUserId() const;
+    // std::string getPassword() const;
     int getBestWPM() const;
     int getTotalGames() const;
     float getAvgWPM() const;
@@ -30,8 +30,9 @@ public:
     int getAverageWPM() const;
     
     // Setters
-    void setName(const std::string& name);
-    void setPassword(const std::string& password);
+    // void setName(const std::string& name);
+    // void setPassword(const std::string& password);
+    void setUserId(const std::string& userId);
     void updateStats(int wpm);
     
     // Serialization

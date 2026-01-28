@@ -1,5 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/TypeDrift.dir/link.d"
+  "CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.o"
+  "CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.o.d"
   "CMakeFiles/TypeDrift.dir/src/auth/user_manager.cpp.o"
   "CMakeFiles/TypeDrift.dir/src/auth/user_manager.cpp.o.d"
   "CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.o"

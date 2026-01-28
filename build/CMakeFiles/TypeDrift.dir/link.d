@@ -4,6 +4,7 @@ TypeDrift: \
   /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o \
   CMakeFiles/TypeDrift.dir/src/main.cpp.o \
   CMakeFiles/TypeDrift.dir/src/auth/user_manager.cpp.o \
+  CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.o \
   CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.o \
   CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.o \
   CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o \
@@ -45,6 +46,8 @@ TypeDrift: \
 CMakeFiles/TypeDrift.dir/src/main.cpp.o:
 
 CMakeFiles/TypeDrift.dir/src/auth/user_manager.cpp.o:
+
+CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.o:
 
 CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.o:
 

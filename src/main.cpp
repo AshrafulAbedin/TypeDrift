@@ -4,7 +4,8 @@
 #include "user_manager.h"
 #include "user.h"
 #include <string>
-
+#include <file_helper.h>
+#include <hashing.h>
 int main(){
     std:: cout<< BG_BRIGHT_RED;
     std::cout << "=== TYPING SPEED TEST APPLICATION ===\n\n";
@@ -36,7 +37,13 @@ int main(){
                     std::getline(std::cin, password);
                     
                     if (UserManager::registerUser(name, user_id, password)) {
-                        currentUser = UserManager::loadUser(user_id);
+                        initCharMap();
+                        std::string encryptedUserId = encryptString(padString(user_id, 23));
+                        
+                        // Load the newly registered user
+                        currentUser = UserManager::loadUser(encryptedUserId);
+                        currentUser.setUserId(encryptedUserId);
+                        
                         isLoggedIn = true;
                         std::cout << "\nRegistration successful! Logged in as " << user_id << "\n";
                     }
@@ -50,9 +57,16 @@ int main(){
                     std::getline(std::cin, password);
                     
                     if (UserManager::loginUser(user_id, password)) {
-                        currentUser = UserManager::loadUser(user_id);
+                        initCharMap();
+                        std::string encryptedUserId = encryptString(padString(user_id, 23));
+                        
+                        // Load the user with encrypted ID and stats
+                        currentUser = UserManager::loadUser(encryptedUserId);
+                        currentUser.setUserId(encryptedUserId);
+                        
+                        std::string user_name = FileHandler::getUserNameFromRegistry(encryptedUserId);
                         isLoggedIn = true;
-                        std::cout << "\nLogin successful! Welcome " << currentUser.getName() << "!\n";
+                        std::cout << "\nLogin successful! Welcome " << decryptString(user_name) << "!\n";
                     }
                     break;
                 }
@@ -80,7 +94,10 @@ int main(){
         } else {
             // User is logged in - show game menu
             std::cout << "\n=== GAME MENU ===\n";
-            std::cout << "Logged in as: " << currentUser.getName() << " (" << currentUser.getUserId() << ")\n";
+            initCharMap();
+            std::string encryptedUserId = encryptString(padString(user_id, 23));
+            std::string user_name = FileHandler::getUserNameFromRegistry(encryptedUserId);
+            std::cout << "Logged in as: " << decryptString(user_name) << " (" << user_id << ")\n";
             std::cout << "1. Start Typing Test\n";
             std::cout << "2. View Stats\n";
             std::cout << "3. Logout\n";
