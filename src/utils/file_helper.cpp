@@ -120,18 +120,18 @@ bool FileHandler::userFileExists(const std::string& user_id) {
 std::string FileHandler::findUserPasswordInRegistry(const std::string& user_id) {
     auto lines = FileHandler::readLines("../data/users.txt");
     
+    const int FIELD_LENGTH = 23;
+    const int EXPECTED_LINE_LENGTH = FIELD_LENGTH * 3 + 2; // 3 fields + 2 spaces
+    
     for (const auto& line : lines) {
-        size_t first_colon = line.find(':');
-        if (first_colon == std::string::npos) continue;
+        if (line.length() < EXPECTED_LINE_LENGTH) continue;
         
-        size_t second_colon = line.find(':', first_colon + 1);
-        if (second_colon == std::string::npos) continue;
-        
-        std::string stored_id = line.substr(0, first_colon);
+        // Extract fields by fixed positions
+        std::string stored_id = line.substr(0, FIELD_LENGTH);
         
         if (stored_id == user_id) {
-            // Extract password (after second colon)
-            std::string password = line.substr(second_colon + 1);
+            // Password starts at position: FIELD_LENGTH + 1 (space) + FIELD_LENGTH + 1 (space)
+            std::string password = line.substr(FIELD_LENGTH * 2 + 2, FIELD_LENGTH);
             return password;
         }
     }
@@ -141,21 +141,18 @@ std::string FileHandler::findUserPasswordInRegistry(const std::string& user_id) 
 std::string FileHandler::getUserNameFromRegistry(const std::string& user_id) {
     auto lines = FileHandler::readLines("../data/users.txt");
     
+    const int FIELD_LENGTH = 23;
+    const int EXPECTED_LINE_LENGTH = FIELD_LENGTH * 3 + 2; // 3 fields + 2 spaces
+    
     for (const auto& line : lines) {
-        // Find first colon (between user_id and name)
-        size_t first_colon = line.find(':');
-        if (first_colon == std::string::npos) continue;
+        if (line.length() < EXPECTED_LINE_LENGTH) continue;
         
-        // Find second colon (between name and password)
-        size_t second_colon = line.find(':', first_colon + 1);
-        if (second_colon == std::string::npos) continue;
-        
-        // Extract user_id (before first colon)
-        std::string stored_id = line.substr(0, first_colon);
+        // Extract fields by fixed positions
+        std::string stored_id = line.substr(0, FIELD_LENGTH);
         
         if (stored_id == user_id) {
-            // Extract name (between first and second colon)
-            std::string name = line.substr(first_colon + 1, second_colon - (first_colon + 1));
+            // Name starts at position: FIELD_LENGTH + 1 (space)
+            std::string name = line.substr(FIELD_LENGTH + 1, FIELD_LENGTH);
             return name;
         }
     }
