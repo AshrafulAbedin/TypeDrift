@@ -1,4 +1,5 @@
 #include "user.h"
+#include "file_helper.h"
 #include <sstream>
 #include <iomanip> //For setPreacision in serialization & display
 #include <iostream>
@@ -33,7 +34,7 @@ std::string User::serialize() const {
     std::ostringstream oss;
     oss << best_wpm << "||"
         << std::fixed << std::setprecision(2) << avg_wpm << "||"
-        << total_games;
+        << total_sessions;
     return oss.str();
 }
 
@@ -78,6 +79,7 @@ bool User::deserialize(const std::string& data) {
 }
 
 void User::addSessionResult(int wpm, int accuracy) {
+    // total_sessions = User::getTotalSessions();
     total_sessions++;
     total_wpm += wpm;
     avg_wpm = (float)total_wpm / total_sessions;
@@ -86,6 +88,10 @@ void User::addSessionResult(int wpm, int accuracy) {
     if (wpm > best_wpm) {
         best_wpm = wpm;
     }
+    std::ostringstream oss;
+    oss << best_wpm << "||" << std::fixed << std::setprecision(2) << avg_wpm << "||" << total_sessions;
+    std::string data = oss.str();
+    FileHandler::saveUserData(user_id, data);
 }
 
 void User::displaySessionSummary(int wpm, int accuracy) const {
