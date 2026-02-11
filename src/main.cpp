@@ -81,11 +81,22 @@ int main(){
                 case 3: { // Play as Guest
                     std::cout << "\n=== GUEST MODE ===\n";
                     std::cout << "Playing as Guest (results won't be saved)...\n";
+                    int diff;
+                    std::cout << "\nChoose difficulty:\n";
+                    std::cout << "1. Easy\n2. Medium\n3. Hard\n";
+                    std::cout << "Choice: ";
+                    std::cin >> diff;
+                    std::cin.ignore();
+
+                    if (diff < 1 || diff > 3) {
+                        std::cout << "Invalid choice. Defaulting to Easy.\n";
+                        diff = 1;
+                    }
                     std::cout << "Press Enter to start...";
                     std::cin.get();
                     
                     // Run test, don't save (saveToUser = false)
-                    runSpeedTest(false);
+                    runSpeedTest(false,diff);
                     
                     std::cout << "\nGuest session completed.\n";
                     break;
@@ -115,11 +126,23 @@ int main(){
             switch (choice) {
                 case 1: { // Start Typing Test
                     std::cout << "\nStarting typing test...\n";
+
+                    int diff;
+                    std::cout << "\nChoose difficulty:\n";
+                    std::cout << "1. Easy\n2. Medium\n3. Hard\n";
+                    std::cout << "Choice: ";
+                    std::cin >> diff;
+                    std::cin.ignore();
+
+                    if (diff < 1 || diff > 3) {
+                        std::cout << "Invalid choice. Defaulting to Easy.\n";
+                        diff = 1;
+                    }
                     std::cout << "Press Enter to begin...";
                     std::cin.get();
                     
                     // Run test with saveToUser = true (but we manually save)
-                    TestResults results = runSpeedTest(true);
+                    TestResults results = runSpeedTest(true,diff);
                     
                     // Update user stats with the latest results
                     currentUser.addSessionResult(results.wpm, results.accuracy);

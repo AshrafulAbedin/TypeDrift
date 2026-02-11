@@ -1,1 +1,0 @@
-python loop function variable string integer boolean array object class method import module package library
