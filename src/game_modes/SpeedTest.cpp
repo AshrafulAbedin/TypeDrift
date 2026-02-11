@@ -125,7 +125,7 @@ void displayResults(const TestResults& results) {
     }
     
     cout << endl;
-    cout << "  " << GRAY << "Press " << YELLOW << "'r'" << GRAY << " to retry or " << YELLOW << "'q'" << GRAY << " to quit" << RESET << endl;
+        cout << "  " << GRAY << "Press any key to return to menu..." << RESET << endl;
     cout << endl;
     
     cout.flush();
@@ -137,9 +137,6 @@ TestResults runSpeedTest(bool saveToUser) {
     setTerminal();
     
     TestResults results = {0, 0, 0.0, 0, 0, 0, 0};
-    bool keepPlaying = true;
-    
-    while (keepPlaying) {
 
         /*geting the current time and doing a mod 10 to get values 0-9
     then creating a memory location to append the number
@@ -257,25 +254,20 @@ TestResults runSpeedTest(bool saveToUser) {
         
         // Calculate WPM
         if (timePassed > 0) {
-            results.wpm = (int)((userLen / 5.0) / (timePassed / 60.0));
+            results.wpm = (int)((correct / 5.0) / (timePassed / 60.0));
         }
         
         // Calculate accuracy
-        if (totalKeystrokes > 0) {
-            int correctKeys = totalKeystrokes - totalMistakes;
-            if (correctKeys < 0) correctKeys = 0;
-            results.accuracy = (correctKeys * 100) / totalKeystrokes;
+        if (refLen > 0) {
+            results.accuracy = (correct * 100) / refLen;
         }
         
         displayResults(results);
         
         // Wait for user choice
-        char choice = waitForKey();
+        waitForKey();
         
-        if (choice == 'q' || choice == 'Q') {
-            keepPlaying = false;
-        }
-    }
+    
     
     restoreTerminal();
     clearScreen();
