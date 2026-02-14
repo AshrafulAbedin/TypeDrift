@@ -6,6 +6,8 @@
 #include <string>
 #include <file_helper.h>
 #include <hashing.h>
+#include "session_logger.h"
+#include "leaderboard.h"
 int main(){
     std::cout<<CLEAR_SCREEN;
     std::cout<<"\n";
@@ -118,7 +120,8 @@ int main(){
             std::cout << "Logged in as: " << decryptString(user_name) << " (" << user_id << ")\n";
             std::cout << "1. Start Typing Test\n";
             std::cout << "2. View Stats\n";
-            std::cout << "3. Logout\n";
+            std::cout << "3. View Leaderboard\n";
+            std::cout << "4. Logout\n";
             std::cout << "Choice: ";
             std::cin >> choice;
             std::cin.ignore();
@@ -150,6 +153,13 @@ int main(){
                     // Save updated user data to file
                     UserManager::saveUser(currentUser);
                     
+                    // Log the session to the user's detailed session file
+                    std::string modeName = FileHandler::getGameModeString(1);
+                    SessionLogger::logSession(encryptedUserId, modeName, diff, results.wpm, results.accuracy);
+                    
+                    // Submit to leaderboard
+                    Leaderboard::submitScore(encryptedUserId, diff, results.wpm, results.accuracy);
+                    
                     // Display session summary
                     std::cout << "\n=== SESSION SUMMARY ===\n";
                     std::cout << "Session WPM: " << results.wpm << "\n";
@@ -172,7 +182,21 @@ int main(){
                     std::cin.get();
                     break;
                     
-                case 3: // Logout
+                case 3: { // View Leaderboard
+                    int lbDiff;
+                    std::cout << "\nChoose leaderboard:\n";
+                    std::cout << "1. Easy\n2. Medium\n3. Hard\n";
+                    std::cout << "Choice: ";
+                    std::cin >> lbDiff;
+                    std::cin.ignore();
+                    if (lbDiff < 1 || lbDiff > 3) lbDiff = 1;
+                    Leaderboard::displayLeaderboard(lbDiff);
+                    std::cout << "\nPress Enter to continue...";
+                    std::cin.get();
+                    break;
+                }
+                    
+                case 4: // Logout
                     isLoggedIn = false;
                     std::cout << "\nLogged out successfully.\n";
                     break;
