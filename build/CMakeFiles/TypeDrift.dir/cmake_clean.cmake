@@ -12,6 +12,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.o.d"
   "CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.o"
   "CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.o.d"
+  "CMakeFiles/TypeDrift.dir/src/game_modes/falling_words.cpp.o"
+  "CMakeFiles/TypeDrift.dir/src/game_modes/falling_words.cpp.o.d"
   "CMakeFiles/TypeDrift.dir/src/main.cpp.o"
   "CMakeFiles/TypeDrift.dir/src/main.cpp.o.d"
   "CMakeFiles/TypeDrift.dir/src/utils/file_helper.cpp.o"

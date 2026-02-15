@@ -7,6 +7,7 @@ TypeDrift: \
   CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.o \
   CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.o \
   CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.o \
+  CMakeFiles/TypeDrift.dir/src/game_modes/falling_words.cpp.o \
   CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o \
   CMakeFiles/TypeDrift.dir/src/utils/file_helper.cpp.o \
   CMakeFiles/TypeDrift.dir/src/core/session_logger.cpp.o \
@@ -54,6 +55,8 @@ CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.o:
 CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.o:
 
 CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.o:
+
+CMakeFiles/TypeDrift.dir/src/game_modes/falling_words.cpp.o:
 
 CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o:
 

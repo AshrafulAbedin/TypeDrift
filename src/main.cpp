@@ -8,6 +8,7 @@
 #include <hashing.h>
 #include "session_logger.h"
 #include "leaderboard.h"
+#include "falling_words.h"
 int main(){
     std::cout<<CLEAR_SCREEN;
     std::cout<<"\n";
@@ -119,9 +120,10 @@ int main(){
             std::string user_name = FileHandler::getUserNameFromRegistry(encryptedUserId);
             std::cout << "Logged in as: " << decryptString(user_name) << " (" << user_id << ")\n";
             std::cout << "1. Start Typing Test\n";
-            std::cout << "2. View Stats\n";
-            std::cout << "3. View Leaderboard\n";
-            std::cout << "4. Logout\n";
+            std::cout << "2. Start Falling Words\n";
+            std::cout << "3. View Stats\n";
+            std::cout << "4. View Leaderboard\n";
+            std::cout << "5. Logout\n";
             std::cout << "Choice: ";
             std::cin >> choice;
             std::cin.ignore();
@@ -147,13 +149,11 @@ int main(){
                     // Run test with saveToUser = true (but we manually save)
                     TestResults results = runSpeedTest(true,diff);
                     
-                    // Update user stats with the latest results
+                    // Update user stats in memory
                     currentUser.addSessionResult(results.wpm, results.accuracy);
                     
-                    // Save updated user data to file
-                    UserManager::saveUser(currentUser);
-                    
-                    // Log the session to the user's detailed session file
+                    // Using SessionLogger::logSession instead of UserManager::saveUser() here, as it would overwrite
+            
                     std::string modeName = FileHandler::getGameModeString(1);
                     SessionLogger::logSession(encryptedUserId, modeName, diff, results.wpm, results.accuracy);
                     
@@ -175,14 +175,20 @@ int main(){
                     std::cin.get();
                     break;
                 }
+
+                case 2:
+                    runFallingWords();
+                    std::cout << "\nPress Enter to return to menu...";
+                    std::cin.get();
+                    break;
                     
-                case 2: // View Stats
+                case 3: // View Stats
                     currentUser.displayStats();
                     std::cout << "\nPress Enter to continue...";
                     std::cin.get();
                     break;
                     
-                case 3: { // View Leaderboard
+                case 4: { // View Leaderboard
                     int lbDiff;
                     std::cout << "\nChoose leaderboard:\n";
                     std::cout << "1. Easy\n2. Medium\n3. Hard\n";
@@ -196,7 +202,7 @@ int main(){
                     break;
                 }
                     
-                case 4: // Logout
+                case 5: // Logout
                     isLoggedIn = false;
                     std::cout << "\nLogged out successfully.\n";
                     break;

@@ -273,6 +273,30 @@ src/game_modes/TerminalSetup.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.s
 .PHONY : src/game_modes/TerminalSetup.cpp.s
 
+src/game_modes/falling_words.o: src/game_modes/falling_words.cpp.o
+.PHONY : src/game_modes/falling_words.o
+
+# target to build an object file
+src/game_modes/falling_words.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/game_modes/falling_words.cpp.o
+.PHONY : src/game_modes/falling_words.cpp.o
+
+src/game_modes/falling_words.i: src/game_modes/falling_words.cpp.i
+.PHONY : src/game_modes/falling_words.i
+
+# target to preprocess a source file
+src/game_modes/falling_words.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/game_modes/falling_words.cpp.i
+.PHONY : src/game_modes/falling_words.cpp.i
+
+src/game_modes/falling_words.s: src/game_modes/falling_words.cpp.s
+.PHONY : src/game_modes/falling_words.s
+
+# target to generate assembly for a file
+src/game_modes/falling_words.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/game_modes/falling_words.cpp.s
+.PHONY : src/game_modes/falling_words.cpp.s
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -372,6 +396,9 @@ help:
 	@echo "... src/game_modes/TerminalSetup.o"
 	@echo "... src/game_modes/TerminalSetup.i"
 	@echo "... src/game_modes/TerminalSetup.s"
+	@echo "... src/game_modes/falling_words.o"
+	@echo "... src/game_modes/falling_words.i"
+	@echo "... src/game_modes/falling_words.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

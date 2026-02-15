@@ -146,4 +146,5 @@ CMakeFiles/TypeDrift.dir/src/main.cpp.o: \
  /usr/include/c++/15/bits/vector.tcc \
  /home/muhaiminul/Desktop/Projects/TypeDrift/src/auth/hashing.h \
  /home/muhaiminul/Desktop/Projects/TypeDrift/src/core/session_logger.h \
- /home/muhaiminul/Desktop/Projects/TypeDrift/src/core/leaderboard.h
+ /home/muhaiminul/Desktop/Projects/TypeDrift/src/core/leaderboard.h \
+ /home/muhaiminul/Desktop/Projects/TypeDrift/src/game_modes/falling_words.h

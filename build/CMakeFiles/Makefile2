@@ -85,12 +85,12 @@ clean: CMakeFiles/TypeDrift.dir/clean
 CMakeFiles/TypeDrift.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/muhaiminul/Desktop/Projects/TypeDrift/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10 "Built target TypeDrift"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/muhaiminul/Desktop/Projects/TypeDrift/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11 "Built target TypeDrift"
 .PHONY : CMakeFiles/TypeDrift.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/TypeDrift.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/muhaiminul/Desktop/Projects/TypeDrift/build/CMakeFiles 10
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/muhaiminul/Desktop/Projects/TypeDrift/build/CMakeFiles 11
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/TypeDrift.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/muhaiminul/Desktop/Projects/TypeDrift/build/CMakeFiles 0
 .PHONY : CMakeFiles/TypeDrift.dir/rule
@@ -102,7 +102,7 @@ TypeDrift: CMakeFiles/TypeDrift.dir/rule
 # codegen rule for target.
 CMakeFiles/TypeDrift.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/muhaiminul/Desktop/Projects/TypeDrift/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10 "Finished codegen for target TypeDrift"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/muhaiminul/Desktop/Projects/TypeDrift/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11 "Finished codegen for target TypeDrift"
 .PHONY : CMakeFiles/TypeDrift.dir/codegen
 
 # clean rule for target.

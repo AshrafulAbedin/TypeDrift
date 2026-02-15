@@ -1250,6 +1250,9 @@ CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.o: /home/muhaiminul/De
   /usr/lib/gcc/x86_64-redhat-linux/15/include/stdarg.h \
   /usr/lib/gcc/x86_64-redhat-linux/15/include/stddef.h
 
+CMakeFiles/TypeDrift.dir/src/game_modes/falling_words.cpp.o: /home/muhaiminul/Desktop/Projects/TypeDrift/src/game_modes/falling_words.cpp \
+  /usr/include/stdc-predef.h
+
 CMakeFiles/TypeDrift.dir/src/main.cpp.o: /home/muhaiminul/Desktop/Projects/TypeDrift/src/main.cpp \
   /home/muhaiminul/Desktop/Projects/TypeDrift/src/auth/hashing.h \
   /home/muhaiminul/Desktop/Projects/TypeDrift/src/auth/user_manager.h \
@@ -1257,6 +1260,7 @@ CMakeFiles/TypeDrift.dir/src/main.cpp.o: /home/muhaiminul/Desktop/Projects/TypeD
   /home/muhaiminul/Desktop/Projects/TypeDrift/src/core/session_logger.h \
   /home/muhaiminul/Desktop/Projects/TypeDrift/src/game_modes/SpeedTest.h \
   /home/muhaiminul/Desktop/Projects/TypeDrift/src/game_modes/TerminalSetup.h \
+  /home/muhaiminul/Desktop/Projects/TypeDrift/src/game_modes/falling_words.h \
   /home/muhaiminul/Desktop/Projects/TypeDrift/src/utils/file_helper.h \
   /home/muhaiminul/Desktop/Projects/TypeDrift/src/utils/user.h \
   /usr/include/alloca.h \
@@ -1909,6 +1913,63 @@ CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o: /home/muhaiminul/Desktop/Projects
   /usr/lib/gcc/x86_64-redhat-linux/15/include/stdarg.h \
   /usr/lib/gcc/x86_64-redhat-linux/15/include/stddef.h
 
+TypeDrift: /lib64/ld-linux-x86-64.so.2 \
+  /lib64/libc.so.6 \
+  /lib64/libgcc_s.so.1 \
+  /lib64/libm.so.6 \
+  /lib64/libmvec.so.1 \
+  /usr/lib64/crt1.o \
+  /usr/lib64/crti.o \
+  /usr/lib64/crtn.o \
+  /usr/lib64/libc.so \
+  /usr/lib64/libm.so \
+  /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o \
+  /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o \
+  /usr/lib/gcc/x86_64-redhat-linux/15/libgcc.a \
+  /usr/lib/gcc/x86_64-redhat-linux/15/libgcc_s.so \
+  /usr/lib/gcc/x86_64-redhat-linux/15/libstdc++.so \
+  /usr/lib64/libc_nonshared.a \
+  CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.o \
+  CMakeFiles/TypeDrift.dir/src/auth/user_manager.cpp.o \
+  CMakeFiles/TypeDrift.dir/src/core/leaderboard.cpp.o \
+  CMakeFiles/TypeDrift.dir/src/core/session_logger.cpp.o \
+  CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.o \
+  CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.o \
+  CMakeFiles/TypeDrift.dir/src/game_modes/falling_words.cpp.o \
+  CMakeFiles/TypeDrift.dir/src/main.cpp.o \
+  CMakeFiles/TypeDrift.dir/src/utils/file_helper.cpp.o \
+  CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o
+
+
+CMakeFiles/TypeDrift.dir/src/utils/file_helper.cpp.o:
+
+CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.o:
+
+CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.o:
+
+CMakeFiles/TypeDrift.dir/src/core/session_logger.cpp.o:
+
+CMakeFiles/TypeDrift.dir/src/core/leaderboard.cpp.o:
+
+CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.o:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/libstdc++.so:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/libgcc.a:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o:
+
+/usr/lib64/libm.so:
+
+/usr/lib64/crt1.o:
+
+/lib64/libmvec.so.1:
+
+/lib64/libgcc_s.so.1:
+
+/lib64/libc.so.6:
+
+/lib64/ld-linux-x86-64.so.2:
 
 /home/muhaiminul/Desktop/Projects/TypeDrift/src/utils/user.cpp:
 
@@ -1924,7 +1985,11 @@ CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o: /home/muhaiminul/Desktop/Projects
 
 /home/muhaiminul/Desktop/Projects/TypeDrift/src/utils/file_helper.cpp:
 
+/home/muhaiminul/Desktop/Projects/TypeDrift/src/game_modes/falling_words.h:
+
 /home/muhaiminul/Desktop/Projects/TypeDrift/src/main.cpp:
+
+/home/muhaiminul/Desktop/Projects/TypeDrift/src/game_modes/falling_words.cpp:
 
 /usr/include/unistd.h:
 
@@ -1959,6 +2024,8 @@ CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o: /home/muhaiminul/Desktop/Projects
 /usr/include/c++/15/string:
 
 /usr/include/c++/15/initializer_list:
+
+/usr/lib64/libc_nonshared.a:
 
 /usr/include/c++/15/ext/numeric_traits.h:
 
@@ -2018,6 +2085,8 @@ CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o: /home/muhaiminul/Desktop/Projects
 
 /home/muhaiminul/Desktop/Projects/TypeDrift/src/game_modes/SpeedTest.cpp:
 
+/lib64/libm.so.6:
+
 /usr/include/c++/15/bits/hash_bytes.h:
 
 /usr/include/c++/15/bits/locale_classes.tcc:
@@ -2027,6 +2096,8 @@ CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o: /home/muhaiminul/Desktop/Projects
 /usr/include/bits/locale.h:
 
 /usr/include/c++/15/tuple:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/libgcc_s.so:
 
 /usr/include/c++/15/bits/cxxabi_forced.h:
 
@@ -2132,6 +2203,8 @@ CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o: /home/muhaiminul/Desktop/Projects
 
 /usr/include/bits/waitflags.h:
 
+/usr/lib64/libc.so:
+
 /usr/include/ctype.h:
 
 /usr/include/c++/15/bits/locale_facets.tcc:
@@ -2141,6 +2214,8 @@ CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o: /home/muhaiminul/Desktop/Projects
 /usr/include/c++/15/x86_64-redhat-linux/bits/atomic_word.h:
 
 /usr/include/c++/15/bits/version.h:
+
+CMakeFiles/TypeDrift.dir/src/game_modes/falling_words.cpp.o:
 
 /usr/include/c++/15/bits/concept_check.h:
 
@@ -2177,6 +2252,8 @@ CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o: /home/muhaiminul/Desktop/Projects
 /usr/include/linux/errno.h:
 
 /usr/include/bits/types/__mbstate_t.h:
+
+CMakeFiles/TypeDrift.dir/src/auth/user_manager.cpp.o:
 
 /usr/include/bits/stdio_lim.h:
 
@@ -2238,6 +2315,8 @@ CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o: /home/muhaiminul/Desktop/Projects
 
 /usr/include/bits/types/locale_t.h:
 
+/usr/lib/gcc/x86_64-redhat-linux/15/crtend.o:
+
 /usr/include/c++/15/bits/stl_iterator_base_types.h:
 
 /usr/include/c++/15/x86_64-redhat-linux/bits/c++allocator.h:
@@ -2270,6 +2349,8 @@ CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o: /home/muhaiminul/Desktop/Projects
 
 /usr/include/asm-generic/posix_types.h:
 
+/usr/lib64/crti.o:
+
 /usr/include/bits/wordsize.h:
 
 /usr/include/stdio.h:
@@ -2291,6 +2372,8 @@ CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o: /home/muhaiminul/Desktop/Projects
 /usr/include/c++/15/sstream:
 
 /usr/include/wchar.h:
+
+/usr/lib64/crtn.o:
 
 /usr/include/c++/15/bits/ios_base.h:
 
@@ -2329,6 +2412,8 @@ CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o: /home/muhaiminul/Desktop/Projects
 /usr/include/c++/15/bits/string_view.tcc:
 
 /usr/include/bits/types/struct_tm.h:
+
+CMakeFiles/TypeDrift.dir/src/main.cpp.o:
 
 /usr/include/c++/15/bits/basic_ios.h:
 
@@ -2407,6 +2492,8 @@ CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o: /home/muhaiminul/Desktop/Projects
 /usr/include/c++/15/x86_64-redhat-linux/bits/c++locale.h:
 
 /usr/include/c++/15/bits/codecvt.h:
+
+CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o:
 
 /usr/include/c++/15/x86_64-redhat-linux/bits/c++io.h:
 
