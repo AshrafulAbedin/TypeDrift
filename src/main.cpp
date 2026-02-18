@@ -6,6 +6,9 @@
 #include <string>
 #include <file_helper.h>
 #include <hashing.h>
+#include "session_logger.h"
+#include "leaderboard.h"
+#include "falling_words.h"
 int main(){
     std::cout<<CLEAR_SCREEN;
     std::cout<<"\n";
@@ -81,11 +84,22 @@ int main(){
                 case 3: { // Play as Guest
                     std::cout << "\n=== GUEST MODE ===\n";
                     std::cout << "Playing as Guest (results won't be saved)...\n";
+                    int diff;
+                    std::cout << "\nChoose difficulty:\n";
+                    std::cout << "1. Easy\n2. Medium\n3. Hard\n";
+                    std::cout << "Choice: ";
+                    std::cin >> diff;
+                    std::cin.ignore();
+
+                    if (diff < 1 || diff > 3) {
+                        std::cout << "Invalid choice. Defaulting to Easy.\n";
+                        diff = 1;
+                    }
                     std::cout << "Press Enter to start...";
                     std::cin.get();
                     
                     // Run test, don't save (saveToUser = false)
-                    runSpeedTest(false);
+                    runSpeedTest(false,diff);
                     
                     std::cout << "\nGuest session completed.\n";
                     break;
@@ -106,8 +120,10 @@ int main(){
             std::string user_name = FileHandler::getUserNameFromRegistry(encryptedUserId);
             std::cout << "Logged in as: " << decryptString(user_name) << " (" << user_id << ")\n";
             std::cout << "1. Start Typing Test\n";
-            std::cout << "2. View Stats\n";
-            std::cout << "3. Logout\n";
+            std::cout << "2. Start Falling Words\n";
+            std::cout << "3. View Stats\n";
+            std::cout << "4. View Leaderboard\n";
+            std::cout << "5. Logout\n";
             std::cout << "Choice: ";
             std::cin >> choice;
             std::cin.ignore();
@@ -115,17 +131,34 @@ int main(){
             switch (choice) {
                 case 1: { // Start Typing Test
                     std::cout << "\nStarting typing test...\n";
+
+                    int diff;
+                    std::cout << "\nChoose difficulty:\n";
+                    std::cout << "1. Easy\n2. Medium\n3. Hard\n";
+                    std::cout << "Choice: ";
+                    std::cin >> diff;
+                    std::cin.ignore();
+
+                    if (diff < 1 || diff > 3) {
+                        std::cout << "Invalid choice. Defaulting to Easy.\n";
+                        diff = 1;
+                    }
                     std::cout << "Press Enter to begin...";
                     std::cin.get();
                     
                     // Run test with saveToUser = true (but we manually save)
-                    TestResults results = runSpeedTest(true);
+                    TestResults results = runSpeedTest(true,diff);
                     
-                    // Update user stats with the latest results
+                    // Update user stats in memory
                     currentUser.addSessionResult(results.wpm, results.accuracy);
                     
-                    // Save updated user data to file
-                    UserManager::saveUser(currentUser);
+                    // Using SessionLogger::logSession instead of UserManager::saveUser() here, as it would overwrite
+            
+                    std::string modeName = FileHandler::getGameModeString(1);
+                    SessionLogger::logSession(encryptedUserId, modeName, diff, results.wpm, results.accuracy);
+                    
+                    // Submit to leaderboard
+                    Leaderboard::submitScore(encryptedUserId, diff, results.wpm, results.accuracy);
                     
                     // Display session summary
                     std::cout << "\n=== SESSION SUMMARY ===\n";
@@ -142,14 +175,34 @@ int main(){
                     std::cin.get();
                     break;
                 }
+
+                case 2:
+                    runFallingWords();
+                    std::cout << "\nPress Enter to return to menu...";
+                    std::cin.get();
+                    break;
                     
-                case 2: // View Stats
+                case 3: // View Stats
                     currentUser.displayStats();
                     std::cout << "\nPress Enter to continue...";
                     std::cin.get();
                     break;
                     
-                case 3: // Logout
+                case 4: { // View Leaderboard
+                    int lbDiff;
+                    std::cout << "\nChoose leaderboard:\n";
+                    std::cout << "1. Easy\n2. Medium\n3. Hard\n";
+                    std::cout << "Choice: ";
+                    std::cin >> lbDiff;
+                    std::cin.ignore();
+                    if (lbDiff < 1 || lbDiff > 3) lbDiff = 1;
+                    Leaderboard::displayLeaderboard(lbDiff);
+                    std::cout << "\nPress Enter to continue...";
+                    std::cin.get();
+                    break;
+                }
+                    
+                case 5: // Logout
                     isLoggedIn = false;
                     std::cout << "\nLogged out successfully.\n";
                     break;

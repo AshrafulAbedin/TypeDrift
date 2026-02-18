@@ -125,42 +125,58 @@ void displayResults(const TestResults& results) {
     }
     
     cout << endl;
-    cout << "  " << GRAY << "Press " << YELLOW << "'r'" << GRAY << " to retry or " << YELLOW << "'q'" << GRAY << " to quit" << RESET << endl;
+        cout << "  " << GRAY << "Press any key to return to menu..." << RESET << endl;
     cout << endl;
     
     cout.flush();
 }
 
-TestResults runSpeedTest(bool saveToUser) {
+TestResults runSpeedTest(bool saveToUser,int difficulty) {
 
     
     setTerminal();
     
     TestResults results = {0, 0, 0.0, 0, 0, 0, 0};
-    bool keepPlaying = true;
-    
-    while (keepPlaying) {
 
         /*geting the current time and doing a mod 10 to get values 0-9
     then creating a memory location to append the number
     adding the asci value with the file number to get the string of the digit*/
-    long current_time=(long)getCurrentTime();
-    std::cout << "Trying to open " << std::endl;
-    int fileindex=current_time % 10;
-    char filename[50];
-    const char base_text[] ="../data/texts/practice";
-    int i=0;
-    while(base_text[i] !='\0'){
-        filename[i]=base_text[i];
+// Pick a random file index from 1 to 50
+    long current_time = (long)getCurrentTime();
+    int fileindex = (current_time % 50) + 1;
+
+    // Build the folder name based on difficulty
+    char filename[100];
+    const char* folder;
+    const char* prefix;
+
+    if (difficulty == 1) {
+        folder = "../data/texts/easy/easy";
+    } else if (difficulty == 2) {
+        folder = "../data/texts/medium/medium";
+    } else {
+        folder = "../data/texts/hard/hard";
+    }
+
+    // Copy folder path into filename
+    int i = 0;
+    while (folder[i] != '\0') {
+        filename[i] = folder[i];
         i++;
     }
-    filename[i++] ='0' + fileindex;
+
+    // Append the file number (1-50)
+    if (fileindex >= 10) {
+        filename[i++] = '0' + (fileindex / 10);
+    }
+    filename[i++] = '0' + (fileindex % 10);
+
+    // Append .txt
     filename[i++] = '.';
     filename[i++] = 't';
     filename[i++] = 'x';
     filename[i++] = 't';
-    filename[i]='\0';
-
+    filename[i] = '\0';
     // Load reference text
     string text = FileHandler::readFile(filename);
     const char* referenceText = text.c_str();
@@ -257,25 +273,20 @@ TestResults runSpeedTest(bool saveToUser) {
         
         // Calculate WPM
         if (timePassed > 0) {
-            results.wpm = (int)((userLen / 5.0) / (timePassed / 60.0));
+            results.wpm = (int)((correct / 5.0) / (timePassed / 60.0));
         }
         
         // Calculate accuracy
-        if (totalKeystrokes > 0) {
-            int correctKeys = totalKeystrokes - totalMistakes;
-            if (correctKeys < 0) correctKeys = 0;
-            results.accuracy = (correctKeys * 100) / totalKeystrokes;
+        if (refLen > 0) {
+            results.accuracy = (correct * 100) / refLen;
         }
         
         displayResults(results);
         
         // Wait for user choice
-        char choice = waitForKey();
+        waitForKey();
         
-        if (choice == 'q' || choice == 'Q') {
-            keepPlaying = false;
-        }
-    }
+    
     
     restoreTerminal();
     clearScreen();

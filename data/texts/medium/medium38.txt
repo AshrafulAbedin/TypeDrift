@@ -1,0 +1,1 @@
+Quantum computing made significant strides as IBM and Google announced breakthroughs in error correction and qubit stability. Researchers predicted that practical quantum computers could revolutionize drug discovery, cryptography, and materials science within the next decade.

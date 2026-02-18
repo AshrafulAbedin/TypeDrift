@@ -11,7 +11,7 @@ struct TestResults {
     int total_chars;
 };
 
-TestResults runSpeedTest(bool saveToUser = false);
+TestResults runSpeedTest(bool saveToUser = false,int difficulty=1);
 
 void displayResults(const TestResults& results);
 

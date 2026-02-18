@@ -129,6 +129,30 @@ TypeDrift/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/build
 .PHONY : TypeDrift/fast
 
+src/auth/hashing.o: src/auth/hashing.cpp.o
+.PHONY : src/auth/hashing.o
+
+# target to build an object file
+src/auth/hashing.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.o
+.PHONY : src/auth/hashing.cpp.o
+
+src/auth/hashing.i: src/auth/hashing.cpp.i
+.PHONY : src/auth/hashing.i
+
+# target to preprocess a source file
+src/auth/hashing.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.i
+.PHONY : src/auth/hashing.cpp.i
+
+src/auth/hashing.s: src/auth/hashing.cpp.s
+.PHONY : src/auth/hashing.s
+
+# target to generate assembly for a file
+src/auth/hashing.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.s
+.PHONY : src/auth/hashing.cpp.s
+
 src/auth/user_manager.o: src/auth/user_manager.cpp.o
 .PHONY : src/auth/user_manager.o
 
@@ -152,6 +176,54 @@ src/auth/user_manager.s: src/auth/user_manager.cpp.s
 src/auth/user_manager.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/auth/user_manager.cpp.s
 .PHONY : src/auth/user_manager.cpp.s
+
+src/core/leaderboard.o: src/core/leaderboard.cpp.o
+.PHONY : src/core/leaderboard.o
+
+# target to build an object file
+src/core/leaderboard.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/core/leaderboard.cpp.o
+.PHONY : src/core/leaderboard.cpp.o
+
+src/core/leaderboard.i: src/core/leaderboard.cpp.i
+.PHONY : src/core/leaderboard.i
+
+# target to preprocess a source file
+src/core/leaderboard.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/core/leaderboard.cpp.i
+.PHONY : src/core/leaderboard.cpp.i
+
+src/core/leaderboard.s: src/core/leaderboard.cpp.s
+.PHONY : src/core/leaderboard.s
+
+# target to generate assembly for a file
+src/core/leaderboard.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/core/leaderboard.cpp.s
+.PHONY : src/core/leaderboard.cpp.s
+
+src/core/session_logger.o: src/core/session_logger.cpp.o
+.PHONY : src/core/session_logger.o
+
+# target to build an object file
+src/core/session_logger.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/core/session_logger.cpp.o
+.PHONY : src/core/session_logger.cpp.o
+
+src/core/session_logger.i: src/core/session_logger.cpp.i
+.PHONY : src/core/session_logger.i
+
+# target to preprocess a source file
+src/core/session_logger.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/core/session_logger.cpp.i
+.PHONY : src/core/session_logger.cpp.i
+
+src/core/session_logger.s: src/core/session_logger.cpp.s
+.PHONY : src/core/session_logger.s
+
+# target to generate assembly for a file
+src/core/session_logger.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/core/session_logger.cpp.s
+.PHONY : src/core/session_logger.cpp.s
 
 src/game_modes/SpeedTest.o: src/game_modes/SpeedTest.cpp.o
 .PHONY : src/game_modes/SpeedTest.o
@@ -200,6 +272,30 @@ src/game_modes/TerminalSetup.s: src/game_modes/TerminalSetup.cpp.s
 src/game_modes/TerminalSetup.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.s
 .PHONY : src/game_modes/TerminalSetup.cpp.s
+
+src/game_modes/falling_words.o: src/game_modes/falling_words.cpp.o
+.PHONY : src/game_modes/falling_words.o
+
+# target to build an object file
+src/game_modes/falling_words.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/game_modes/falling_words.cpp.o
+.PHONY : src/game_modes/falling_words.cpp.o
+
+src/game_modes/falling_words.i: src/game_modes/falling_words.cpp.i
+.PHONY : src/game_modes/falling_words.i
+
+# target to preprocess a source file
+src/game_modes/falling_words.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/game_modes/falling_words.cpp.i
+.PHONY : src/game_modes/falling_words.cpp.i
+
+src/game_modes/falling_words.s: src/game_modes/falling_words.cpp.s
+.PHONY : src/game_modes/falling_words.s
+
+# target to generate assembly for a file
+src/game_modes/falling_words.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/game_modes/falling_words.cpp.s
+.PHONY : src/game_modes/falling_words.cpp.s
 
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
@@ -282,15 +378,27 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... TypeDrift"
+	@echo "... src/auth/hashing.o"
+	@echo "... src/auth/hashing.i"
+	@echo "... src/auth/hashing.s"
 	@echo "... src/auth/user_manager.o"
 	@echo "... src/auth/user_manager.i"
 	@echo "... src/auth/user_manager.s"
+	@echo "... src/core/leaderboard.o"
+	@echo "... src/core/leaderboard.i"
+	@echo "... src/core/leaderboard.s"
+	@echo "... src/core/session_logger.o"
+	@echo "... src/core/session_logger.i"
+	@echo "... src/core/session_logger.s"
 	@echo "... src/game_modes/SpeedTest.o"
 	@echo "... src/game_modes/SpeedTest.i"
 	@echo "... src/game_modes/SpeedTest.s"
 	@echo "... src/game_modes/TerminalSetup.o"
 	@echo "... src/game_modes/TerminalSetup.i"
 	@echo "... src/game_modes/TerminalSetup.s"
+	@echo "... src/game_modes/falling_words.o"
+	@echo "... src/game_modes/falling_words.i"
+	@echo "... src/game_modes/falling_words.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

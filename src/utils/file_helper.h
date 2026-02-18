@@ -30,6 +30,10 @@ public:
     static bool userFileExists(const std::string& user_id);
     static std::string findUserPasswordInRegistry(const std::string& user_id); 
     static std::string getUserNameFromRegistry(const std::string& user_id);
+
+    // Game info helpers
+    static std::string getDifficultyString(int difficulty);
+    static std::string getGameModeString(int mode);
 };
 
 #endif // FILE_HANDLER_H

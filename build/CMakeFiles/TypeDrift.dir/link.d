@@ -4,10 +4,14 @@ TypeDrift: \
   /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o \
   CMakeFiles/TypeDrift.dir/src/main.cpp.o \
   CMakeFiles/TypeDrift.dir/src/auth/user_manager.cpp.o \
+  CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.o \
   CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.o \
   CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.o \
+  CMakeFiles/TypeDrift.dir/src/game_modes/falling_words.cpp.o \
   CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o \
   CMakeFiles/TypeDrift.dir/src/utils/file_helper.cpp.o \
+  CMakeFiles/TypeDrift.dir/src/core/session_logger.cpp.o \
+  CMakeFiles/TypeDrift.dir/src/core/leaderboard.cpp.o \
   /usr/lib/gcc/x86_64-redhat-linux/15/libstdc++.so \
   /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libm.so \
   /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libm.so \
@@ -46,13 +50,21 @@ CMakeFiles/TypeDrift.dir/src/main.cpp.o:
 
 CMakeFiles/TypeDrift.dir/src/auth/user_manager.cpp.o:
 
+CMakeFiles/TypeDrift.dir/src/auth/hashing.cpp.o:
+
 CMakeFiles/TypeDrift.dir/src/game_modes/SpeedTest.cpp.o:
 
 CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.o:
 
+CMakeFiles/TypeDrift.dir/src/game_modes/falling_words.cpp.o:
+
 CMakeFiles/TypeDrift.dir/src/utils/user.cpp.o:
 
 CMakeFiles/TypeDrift.dir/src/utils/file_helper.cpp.o:
+
+CMakeFiles/TypeDrift.dir/src/core/session_logger.cpp.o:
+
+CMakeFiles/TypeDrift.dir/src/core/leaderboard.cpp.o:
 
 /usr/lib/gcc/x86_64-redhat-linux/15/libstdc++.so:
 

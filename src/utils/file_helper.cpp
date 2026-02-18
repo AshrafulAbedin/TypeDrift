@@ -159,3 +159,16 @@ std::string FileHandler::getUserNameFromRegistry(const std::string& user_id) {
     
     return "";
 }
+
+std::string FileHandler::getDifficultyString(int difficulty) {
+    if (difficulty == 1) return "Easy";
+    if (difficulty == 2) return "Medium";
+    if (difficulty == 3) return "Hard";
+    return "Easy";
+}
+
+std::string FileHandler::getGameModeString(int mode) {
+    if (mode == 1) return "SpeedTest";
+    // Add more modes here as they are created
+    return "SpeedTest";
+}
