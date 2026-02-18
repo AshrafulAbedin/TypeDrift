@@ -278,6 +278,17 @@ TestResults runTimeTest() {
     if (totalKeystrokes > 0) {
         results.accuracy = (correct * 100) / totalKeystrokes;
     }
+        double waitStart = getCurrentTime();
+
+    // Wait for 1 seconds or until user presses a key to show results
+    while (getCurrentTime() - waitStart < 1.0) {
+        if (isKeyPressed()) {
+            readKey();  
+        }
+    }
+    while (isKeyPressed()) {
+        readKey();
+    }
 
     displayTimeResults(results);
     waitForKey();
