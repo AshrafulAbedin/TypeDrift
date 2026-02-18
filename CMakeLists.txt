@@ -16,6 +16,7 @@ add_executable(TypeDrift
     src/utils/file_helper.cpp
     src/core/session_logger.cpp
     src/core/leaderboard.cpp
+    src/game_modes/TimeTest.cpp
 )
 target_include_directories(TypeDrift PRIVATE
     src
