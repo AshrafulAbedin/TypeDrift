@@ -2,6 +2,10 @@ CMakeFiles/TypeDrift.dir/src/main.cpp.o: \
  /home/luimas834/proext/TypeDrift/src/main.cpp /usr/include/stdc-predef.h \
  /home/luimas834/proext/TypeDrift/src/game_modes/TerminalSetup.h \
  /home/luimas834/proext/TypeDrift/src/game_modes/SpeedTest.h \
+ /home/luimas834/proext/TypeDrift/src/game_modes/TimeTest.h \
+ /home/luimas834/proext/TypeDrift/src/game_modes/SpeedTest.h \
+ /home/luimas834/proext/TypeDrift/src/game_modes/falling_words.h \
+ /home/luimas834/proext/TypeDrift/src/game_modes/vowel_game.h \
  /usr/include/c++/15.2.1/iostream \
  /usr/include/c++/15.2.1/bits/requires_hosted.h \
  /usr/include/c++/15.2.1/x86_64-pc-linux-gnu/bits/c++config.h \
@@ -157,7 +161,4 @@ CMakeFiles/TypeDrift.dir/src/main.cpp.o: \
  /usr/include/c++/15.2.1/bits/vector.tcc \
  /home/luimas834/proext/TypeDrift/src/auth/hashing.h \
  /home/luimas834/proext/TypeDrift/src/core/session_logger.h \
- /home/luimas834/proext/TypeDrift/src/core/leaderboard.h \
- /home/luimas834/proext/TypeDrift/src/game_modes/falling_words.h \
- /home/luimas834/proext/TypeDrift/src/game_modes/TimeTest.h \
- /home/luimas834/proext/TypeDrift/src/game_modes/SpeedTest.h
+ /home/luimas834/proext/TypeDrift/src/core/leaderboard.h

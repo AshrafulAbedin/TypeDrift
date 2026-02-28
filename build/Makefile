@@ -321,6 +321,30 @@ src/game_modes/falling_words.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/game_modes/falling_words.cpp.s
 .PHONY : src/game_modes/falling_words.cpp.s
 
+src/game_modes/vowel_game.o: src/game_modes/vowel_game.cpp.o
+.PHONY : src/game_modes/vowel_game.o
+
+# target to build an object file
+src/game_modes/vowel_game.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/game_modes/vowel_game.cpp.o
+.PHONY : src/game_modes/vowel_game.cpp.o
+
+src/game_modes/vowel_game.i: src/game_modes/vowel_game.cpp.i
+.PHONY : src/game_modes/vowel_game.i
+
+# target to preprocess a source file
+src/game_modes/vowel_game.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/game_modes/vowel_game.cpp.i
+.PHONY : src/game_modes/vowel_game.cpp.i
+
+src/game_modes/vowel_game.s: src/game_modes/vowel_game.cpp.s
+.PHONY : src/game_modes/vowel_game.s
+
+# target to generate assembly for a file
+src/game_modes/vowel_game.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TypeDrift.dir/build.make CMakeFiles/TypeDrift.dir/src/game_modes/vowel_game.cpp.s
+.PHONY : src/game_modes/vowel_game.cpp.s
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -426,6 +450,9 @@ help:
 	@echo "... src/game_modes/falling_words.o"
 	@echo "... src/game_modes/falling_words.i"
 	@echo "... src/game_modes/falling_words.s"
+	@echo "... src/game_modes/vowel_game.o"
+	@echo "... src/game_modes/vowel_game.i"
+	@echo "... src/game_modes/vowel_game.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

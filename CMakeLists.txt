@@ -17,6 +17,7 @@ add_executable(TypeDrift
     src/core/session_logger.cpp
     src/core/leaderboard.cpp
     src/game_modes/TimeTest.cpp
+    src/game_modes/vowel_game.cpp
 )
 target_include_directories(TypeDrift PRIVATE
     src

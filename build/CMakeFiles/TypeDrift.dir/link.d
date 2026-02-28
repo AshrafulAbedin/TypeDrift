@@ -13,6 +13,7 @@ TypeDrift: \
   CMakeFiles/TypeDrift.dir/src/core/session_logger.cpp.o \
   CMakeFiles/TypeDrift.dir/src/core/leaderboard.cpp.o \
   CMakeFiles/TypeDrift.dir/src/game_modes/TimeTest.cpp.o \
+  CMakeFiles/TypeDrift.dir/src/game_modes/vowel_game.cpp.o \
   /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../lib/libstdc++.so \
   /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../lib/libm.so \
   /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../lib/libm.so \
@@ -68,6 +69,8 @@ CMakeFiles/TypeDrift.dir/src/core/session_logger.cpp.o:
 CMakeFiles/TypeDrift.dir/src/core/leaderboard.cpp.o:
 
 CMakeFiles/TypeDrift.dir/src/game_modes/TimeTest.cpp.o:
+
+CMakeFiles/TypeDrift.dir/src/game_modes/vowel_game.cpp.o:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../lib/libstdc++.so:
 
