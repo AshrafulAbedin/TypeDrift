@@ -145,7 +145,7 @@ void vowel_displayResults(const TestResults& results) {
     cout.flush();
 }
 
-void vowel_run() {
+TestResults vowel_run() {
     setTerminal();
     
     TestResults results = {0, 0, 0.0, 0, 0, 0, 0};
@@ -303,4 +303,6 @@ void vowel_run() {
     
     restoreTerminal();
     clearScreen();
+
+    return results;
 }

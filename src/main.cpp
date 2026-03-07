@@ -12,7 +12,10 @@
 #include "session_logger.h"
 #include "leaderboard.h"
 
-int main(){
+int main(int argc, char* argv[]){
+    // Anchor data paths to the executable's location (not CWD)
+    FileHandler::setDataDir(argv[0]);
+
     std::cout << CLEAR_SCREEN;
 
     int choice;
@@ -67,6 +70,8 @@ int main(){
                         currentUser.setUserId(encryptedUserId);
 
                         isLoggedIn = true;
+                        SessionLogger::ensureUserDir(encryptedUserId);
+                        SessionLogger::migrateOldUserFile(encryptedUserId);
                         std::cout << CLEAR_SCREEN;
                         std::cout << "\n";
                         std::cout << GREEN << BOLD << "    Registration successful! " << RESET;
@@ -94,6 +99,8 @@ int main(){
 
                         std::string user_name = FileHandler::getUserNameFromRegistry(encryptedUserId);
                         isLoggedIn = true;
+                        SessionLogger::ensureUserDir(encryptedUserId);
+                        SessionLogger::migrateOldUserFile(encryptedUserId);
                         std::cout << CLEAR_SCREEN;
                         std::cout << "\n";
                         std::cout << GREEN << BOLD << "    Login successful! " << RESET;
@@ -249,7 +256,12 @@ int main(){
                 // ---- FUN MODE: Falling Words ----
                 case 4: {
                     std::cout << CLEAR_SCREEN;
-                    runFallingWords();
+                    int fwScore = runFallingWords();
+
+                    // Log fun mode stats
+                    SessionLogger::logFunSession(encryptedUserId, "FallingWords", 0, 0, fwScore);
+                    Leaderboard::submitFunScore(encryptedUserId, "FallingWords", 0, 0, fwScore);
+
                     std::cout << GRAY << "\n    Press Enter to return to menu..." << RESET;
                     std::cin.get();
                     break;
@@ -262,7 +274,10 @@ int main(){
                     std::cout << GRAY << "    Press Enter to begin..." << RESET;
                     std::cin.get();
 
-                    runTimeTest();
+                    TestResults ttResults = runTimeTest();
+
+                    SessionLogger::logFunSession(encryptedUserId, "TimeTest", 0, 0, ttResults.chars_typed);
+                    Leaderboard::submitFunScore(encryptedUserId, "TimeTest", 0, 0, ttResults.chars_typed);
 
                     std::cout << GRAY << "\n    Press Enter to return to menu..." << RESET;
                     std::cin.get();
@@ -277,7 +292,10 @@ int main(){
                     std::cout << GRAY << "    Press Enter to begin..." << RESET;
                     std::cin.get();
 
-                    vowel_run();
+                    TestResults vgResults = vowel_run();
+
+                    SessionLogger::logFunSession(encryptedUserId, "VowelGame", vgResults.wpm, vgResults.accuracy);
+                    Leaderboard::submitFunScore(encryptedUserId, "VowelGame", vgResults.wpm, vgResults.accuracy);
 
                     std::cout << GRAY << "\n    Press Enter to return to menu..." << RESET;
                     std::cin.get();
@@ -297,24 +315,64 @@ int main(){
                 case 8: {
                     std::cout << CLEAR_SCREEN;
                     std::cout << "\n";
-                    std::cout << BOLD << CYAN << "    === LEADERBOARD ===" << RESET << "\n\n";
-
-                    int lbDiff;
-                    std::cout << BRIGHT_YELLOW << "    1. " << RESET << WHITE << "Easy\n";
-                    std::cout << BRIGHT_YELLOW << "    2. " << RESET << WHITE << "Medium\n";
-                    std::cout << BRIGHT_YELLOW << "    3. " << RESET << WHITE << "Hard\n";
+                    std::cout << BOLD << CYAN;
+                    std::cout << "    ╔══════════════════════════════════════╗\n";
+                    std::cout << "    ║           LEADERBOARD                ║\n";
+                    std::cout << "    ╚══════════════════════════════════════╝\n";
                     std::cout << RESET << "\n";
-                    std::cout << BOLD << BRIGHT_YELLOW << "    Choose difficulty: " << RESET;
-                    std::cin >> lbDiff;
+
+                    std::cout << BOLD << MAGNETA << "    -- Choose Category --\n" << RESET;
+                    std::cout << BRIGHT_YELLOW << "    1. " << RESET << WHITE << "Career Mode\n";
+                    std::cout << BRIGHT_YELLOW << "    2. " << RESET << WHITE << "Fun Mode\n";
+                    std::cout << RESET << "\n";
+                    std::cout << BOLD << BRIGHT_YELLOW << "    Choice: " << RESET;
+
+                    int lbCategory;
+                    std::cin >> lbCategory;
                     std::cin.ignore();
 
-                    if (lbDiff < 1 || lbDiff > 3) {
-                        std::cout << YELLOW << "    Invalid choice. Defaulting to Easy.\n" << RESET;
-                        lbDiff = 1;
-                    }
+                    if (lbCategory == 1) {
+                        // Career mode leaderboard
+                        std::cout << CLEAR_SCREEN << "\n";
+                        std::cout << BOLD << CYAN << "    === CAREER LEADERBOARD ===" << RESET << "\n\n";
+                        std::cout << BRIGHT_YELLOW << "    1. " << RESET << WHITE << "Easy\n";
+                        std::cout << BRIGHT_YELLOW << "    2. " << RESET << WHITE << "Medium\n";
+                        std::cout << BRIGHT_YELLOW << "    3. " << RESET << WHITE << "Hard\n";
+                        std::cout << RESET << "\n";
+                        std::cout << BOLD << BRIGHT_YELLOW << "    Difficulty: " << RESET;
 
-                    std::cout << "\n";
-                    Leaderboard::displayLeaderboard(lbDiff);
+                        int lbDiff;
+                        std::cin >> lbDiff;
+                        std::cin.ignore();
+                        if (lbDiff < 1 || lbDiff > 3) { lbDiff = 1; }
+
+                        std::cout << "\n";
+                        Leaderboard::displayLeaderboard(lbDiff);
+                    } else if (lbCategory == 2) {
+                        // Fun mode leaderboard
+                        std::cout << CLEAR_SCREEN << "\n";
+                        std::cout << BOLD << MAGNETA << "    === FUN MODE LEADERBOARD ===" << RESET << "\n\n";
+                        std::cout << BRIGHT_YELLOW << "    1. " << RESET << WHITE << "Falling Words\n";
+                        std::cout << BRIGHT_YELLOW << "    2. " << RESET << WHITE << "Timed Test\n";
+                        std::cout << BRIGHT_YELLOW << "    3. " << RESET << WHITE << "No Vowel Game\n";
+                        std::cout << RESET << "\n";
+                        std::cout << BOLD << BRIGHT_YELLOW << "    Game: " << RESET;
+
+                        int lbGame;
+                        std::cin >> lbGame;
+                        std::cin.ignore();
+
+                        std::string gameName;
+                        if (lbGame == 1) gameName = "FallingWords";
+                        else if (lbGame == 2) gameName = "TimeTest";
+                        else if (lbGame == 3) gameName = "VowelGame";
+                        else gameName = "FallingWords";
+
+                        std::cout << "\n";
+                        Leaderboard::displayFunLeaderboard(gameName);
+                    } else {
+                        std::cout << RED << "    Invalid choice.\n" << RESET;
+                    }
 
                     std::cout << GRAY << "\n    Press Enter to continue..." << RESET;
                     std::cin.get();
