@@ -1,0 +1,3 @@
+Funmode||0||0||0||20
+Fun mode||FallingWords||5
+Fun mode||FallingWords||20

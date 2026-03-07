@@ -9,6 +9,7 @@ struct TestResults {
     int keystrokes;
     int correct_chars;
     int total_chars;
+    int chars_typed;  // total characters typed by user (used by TimeTest leaderboard)
 };
 
 TestResults runSpeedTest(bool saveToUser = false,int difficulty=1);

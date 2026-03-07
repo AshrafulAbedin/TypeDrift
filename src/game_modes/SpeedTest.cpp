@@ -1,7 +1,7 @@
 #include "SpeedTest.h"
 #include "TerminalSetup.h"
 #include <iostream>
-#include <../utils/file_helper.h>
+#include "file_helper.h"
 
 using namespace std;
 

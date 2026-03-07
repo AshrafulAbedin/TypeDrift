@@ -12,21 +12,34 @@ public:
         std::string userId;
         int wpm;
         int accuracy;
-        float score;  // composite score = wpm * accuracy / 100.0
+        float score;  // composite score = wpm * accuracy / 100.0 (career), or raw score (falling)
     };
 
-    // Submit a score after a game — inserts into the correct difficulty leaderboard if it qualifies
+    // Career mode: submit score for easy/medium/hard
     static bool submitScore(const std::string& userId, int difficulty, int wpm, int accuracy);
 
-    // Load all entries from a difficulty leaderboard
-    static std::vector<LeaderboardEntry> loadLeaderboard(int difficulty);
+    // Fun mode: submit score for a fun game
+    static bool submitFunScore(const std::string& userId, const std::string& gameName,
+                               int wpm, int accuracy, int rawScore = -1);
 
-    // Display a difficulty leaderboard to the terminal
+    // Career mode: load & display leaderboard
+    static std::vector<LeaderboardEntry> loadLeaderboard(int difficulty);
     static void displayLeaderboard(int difficulty);
 
+    // Fun mode: load & display leaderboard
+    static std::vector<LeaderboardEntry> loadFunLeaderboard(const std::string& gameName);
+    static void displayFunLeaderboard(const std::string& gameName);
+
 private:
+    // Career mode paths
     static std::string getLeaderboardFilePath(int difficulty);
     static std::string getDifficultyString(int difficulty);
+
+    // Fun mode paths
+    static std::string getFunLeaderboardFilePath(const std::string& gameName);
+    static std::string getFunGameDisplayName(const std::string& gameName);
+
+    // Shared helpers
     static std::vector<LeaderboardEntry> parseLeaderboardFile(const std::string& filepath);
     static bool writeLeaderboardFile(const std::string& filepath, const std::vector<LeaderboardEntry>& entries);
 };

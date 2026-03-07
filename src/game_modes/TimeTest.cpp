@@ -133,7 +133,7 @@ TestResults runTimeTest() {
 
     setTerminal();
 
-    TestResults results = {0, 0, 0.0, 0, 0, 0, 0};
+    TestResults results = {0, 0, 0.0, 0, 0, 0, 0, 0};
 
     // Pick a random file from timed1.txt to timed50.txt
     long current_time = (long)getCurrentTime();
@@ -270,6 +270,7 @@ TestResults runTimeTest() {
     results.keystrokes = totalKeystrokes;
     results.correct_chars = correct;
     results.total_chars = refLen;
+    results.chars_typed = userLen;  // total characters actually typed by user
 
     if (timePassed > 0) {
         results.wpm = (int)((correct / 5.0) / (timePassed / 60.0));
