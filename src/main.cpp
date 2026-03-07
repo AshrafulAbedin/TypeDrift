@@ -276,8 +276,8 @@ int main(int argc, char* argv[]){
 
                     TestResults ttResults = runTimeTest();
 
-                    SessionLogger::logFunSession(encryptedUserId, "TimeTest", 0, 0, ttResults.chars_typed);
-                    Leaderboard::submitFunScore(encryptedUserId, "TimeTest", 0, 0, ttResults.chars_typed);
+                    SessionLogger::logFunSession(encryptedUserId, "TimeTest", 0, 0, ttResults.correct_chars);
+                    Leaderboard::submitFunScore(encryptedUserId, "TimeTest", 0, 0, ttResults.correct_chars);
 
                     std::cout << GRAY << "\n    Press Enter to return to menu..." << RESET;
                     std::cin.get();
