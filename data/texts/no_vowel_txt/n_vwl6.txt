@@ -1,0 +1,1 @@
+keyboard terminal compile debug syntax error function pointer memory stack heap buffer overflow thread mutex signal process daemon socket protocol packet header payload checksum router switch gateway firewall proxy server client request response status redirect cache cookie session token refresh expiry middleware handler controller model database query index schema migration seed
