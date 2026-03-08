@@ -5,7 +5,7 @@
 #include <hashing.h>
 
 
-const std::string UserManager::USERS_FILE = "../data/users.txt";
+const std::string UserManager::USERS_FILE = ""; // computed via getDataPath at runtime
 
 bool UserManager::registerUser(const std::string& name, const std::string& user_id, const std::string& password) {
     // ... validation code ...
@@ -141,10 +141,12 @@ bool UserManager::validatePassword(const std::string& password) {
 }
 
 bool UserManager::addUserToRegistry(const std::string& user_id, const std::string& name, const std::string& password) {
-    if(!FileHandler::directoryExists("data")){
-        FileHandler::createDirectory("data");
+    std::string dataDir = FileHandler::getDataPath("");
+    std::string usersFile = FileHandler::getDataPath("users.txt");
+    if(!FileHandler::directoryExists(dataDir)){
+        FileHandler::createDirectory(dataDir);
     }
     std::string line = user_id + " " + name + " " + password;
-    return FileHandler::writeLine(USERS_FILE, line);
+    return FileHandler::writeLine(usersFile, line);
 }
 

@@ -1,323 +1,7 @@
-// Syscall numbers for x86_64 Linux
-#define SYS_READ 0
-#define SYS_WRITE 1
-#define SYS_OPEN 2
-#define SYS_CLOSE 3
-#define SYS_IOCTL 16
-#define SYS_NANOSLEEP 35
-#define SYS_CLOCK_GETTIME 228
-
-// IOCTL commands
-#define TCGETS 0x5401
-#define TCSETS 0x5402
-#define TCSETSW 0x5403
-
-// Termios flags
-#define ICANON 0000002
-#define ECHO 0000010
-#define ISIG 0000001
-#define VMIN 6
-#define VTIME 5
-
-// File descriptors
-#define STDIN 0
-#define STDOUT 1
-
-// Structures for syscalls
-struct termios {
-    unsigned int c_iflag;
-    unsigned int c_oflag;
-    unsigned int c_cflag;
-    unsigned int c_lflag;
-    unsigned char c_line;
-    unsigned char c_cc[32];
-    unsigned int c_ispeed;
-    unsigned int c_ospeed;
-};
-
-struct timespec {
-    long tv_sec;
-    long tv_nsec;
-};
-
-// Syscall wrappers
-long syscall1(long n, long a1) {
-    long ret;
-    asm volatile("syscall" : "=a"(ret) : "a"(n), "D"(a1) : "rcx", "r11", "memory");
-    return ret;
-}
-
-long syscall2(long n, long a1, long a2) {
-    long ret;
-    asm volatile("syscall" : "=a"(ret) : "a"(n), "D"(a1), "S"(a2) : "rcx", "r11", "memory");
-    return ret;
-}
-
-long syscall3(long n, long a1, long a2, long a3) {
-    long ret;
-    asm volatile("syscall" : "=a"(ret) : "a"(n), "D"(a1), "S"(a2), "d"(a3) : "rcx", "r11", "memory");
-    return ret;
-}
-
-// Basic memory functions
-void* memset(void* s, int c, unsigned long n) {
-    unsigned char* p = (unsigned char*)s;
-    for(unsigned long i = 0; i < n; i++) {
-        p[i] = (unsigned char)c;
-    }
-    return s;
-}
-
-void* memcpy(void* dest, const void* src, unsigned long n) {
-    unsigned char* d = (unsigned char*)dest;
-    const unsigned char* s = (const unsigned char*)src;
-    for(unsigned long i = 0; i < n; i++) {
-        d[i] = s[i];
-    }
-    return dest;
-}
-
-int strlen(const char* s) {
-    int len = 0;
-    while(s[len]) len++;
-    return len;
-}
-
-int strcmp(const char* s1, const char* s2) {
-    while(*s1 && (*s1 == *s2)) {
-        s1++;
-        s2++;
-    }
-    return *(unsigned char*)s1 - *(unsigned char*)s2;
-}
-
-void strcpy(char* dest, const char* src) {
-    while(*src) {
-        *dest++ = *src++;
-    }
-    *dest = '\0';
-}
-
-// Random number generator (simple LCG)
-unsigned long randState = 12345;
-
-void srand(unsigned long seed) {
-    randState = seed;
-}
-
-int rand() {
-    randState = randState * 1103515245 + 12345;
-    return (randState / 65536) % 32768;
-}
-
-// Time functions
-long long getCurrentTimeMs() {
-    timespec ts;
-    syscall2(SYS_CLOCK_GETTIME, 0, (long)&ts);
-    return ts.tv_sec * 1000LL + ts.tv_nsec / 1000000LL;
-}
-
-void sleepMs(int ms) {
-    timespec ts;
-    ts.tv_sec = ms / 1000;
-    ts.tv_nsec = (ms % 1000) * 1000000;
-    syscall2(SYS_NANOSLEEP, (long)&ts, 0);
-}
-
-// Terminal control
-class Terminal {
-private:
-    termios originalSettings;
-    
-public:
-    void init() {
-        // Get current settings
-        syscall3(SYS_IOCTL, STDIN, TCGETS, (long)&originalSettings);
-        
-        // Set raw mode
-        termios raw = originalSettings;
-        raw.c_lflag &= ~(ICANON | ECHO | ISIG);
-        raw.c_cc[VMIN] = 0;
-        raw.c_cc[VTIME] = 0;
-        syscall3(SYS_IOCTL, STDIN, TCSETSW, (long)&raw);
-        
-        hideCursor();
-        clearScreen();
-    }
-    
-    void restore() {
-        syscall3(SYS_IOCTL, STDIN, TCSETSW, (long)&originalSettings);
-        showCursor();
-        clearScreen();
-    }
-    
-    void clearScreen() {
-        const char* seq = "\033[2J\033[H";
-        syscall3(SYS_WRITE, STDOUT, (long)seq, 10);
-    }
-    
-    void moveCursor(int row, int col) {
-        char buf[32];
-        int len = 0;
-        buf[len++] = '\033';
-        buf[len++] = '[';
-        
-        if(row >= 100) buf[len++] = '0' + (row / 100);
-        if(row >= 10) buf[len++] = '0' + ((row / 10) % 10);
-        buf[len++] = '0' + (row % 10);
-        buf[len++] = ';';
-        
-        if(col >= 100) buf[len++] = '0' + (col / 100);
-        if(col >= 10) buf[len++] = '0' + ((col / 10) % 10);
-        buf[len++] = '0' + (col % 10);
-        buf[len++] = 'H';
-        
-        syscall3(SYS_WRITE, STDOUT, (long)buf, len);
-    }
-    
-    void hideCursor() {
-        const char* seq = "\033[?25l";
-        syscall3(SYS_WRITE, STDOUT, (long)seq, 6);
-    }
-    
-    void showCursor() {
-        const char* seq = "\033[?25h";
-        syscall3(SYS_WRITE, STDOUT, (long)seq, 6);
-    }
-    
-    void print(const char* str) {
-        syscall3(SYS_WRITE, STDOUT, (long)str, strlen(str));
-    }
-    
-    void printAt(int row, int col, const char* str) {
-        moveCursor(row, col);
-        print(str);
-    }
-    
-    void setColor(int colorCode) {
-        char buf[16];
-        int len = 0;
-        buf[len++] = '\033';
-        buf[len++] = '[';
-        if(colorCode >= 10) buf[len++] = '0' + (colorCode / 10);
-        buf[len++] = '0' + (colorCode % 10);
-        buf[len++] = 'm';
-        syscall3(SYS_WRITE, STDOUT, (long)buf, len);
-    }
-    
-    void resetColor() {
-        const char* seq = "\033[0m";
-        syscall3(SYS_WRITE, STDOUT, (long)seq, 4);
-    }
-    
-    char getChar() {
-        char c;
-        long n = syscall3(SYS_READ, STDIN, (long)&c, 1);
-        return (n > 0) ? c : 0;
-    }
-};
-
-// Word database
-class WordDatabase {
-private:
-    static const int MAX_WORDS = 100;
-    const char* words[MAX_WORDS];
-    int wordCount;
-    
-public:
-    WordDatabase() {
-        wordCount = 0;
-        addWord("hello");
-        addWord("world");
-        addWord("code");
-        addWord("program");
-        addWord("terminal");
-        addWord("falling");
-        addWord("tiles");
-        addWord("game");
-        addWord("type");
-        addWord("speed");
-        addWord("score");
-        addWord("quick");
-        addWord("jump");
-        addWord("lazy");
-        addWord("brown");
-        addWord("fox");
-        addWord("dog");
-        addWord("cat");
-        addWord("full");
-        addWord("fulfilment");
-        addWord("complete");
-        addWord("system");
-        addWord("linux");
-        addWord("syscall");
-        addWord("function");
-        addWord("class");
-        addWord("object");
-        addWord("array");
-        addWord("string");
-        addWord("integer");
-        addWord("float");
-        addWord("double");
-        addWord("char");
-        addWord("void");
-        addWord("return");
-        addWord("break");
-        addWord("continue");
-        addWord("while");
-        addWord("for");
-        addWord("switch");
-        addWord("case");
-        addWord("default");
-        addWord("struct");
-        addWord("union");
-        addWord("enum");
-        addWord("typedef");
-        addWord("const");
-        addWord("static");
-        addWord("extern");
-        addWord("register");
-        addWord("volatile");
-    }
-    
-    void addWord(const char* word) {
-        if(wordCount < MAX_WORDS) {
-            words[wordCount++] = word;
-        }
-    }
-    
-    const char* getRandomWord() {
-        if(wordCount == 0) return "word";
-        return words[rand() % wordCount];
-    }
-};
-
-// Falling word structure
-struct FallingWord {
-    char word[50];
-    int wordLen;
-    int row;
-    int col;
-    int matchedChars;
-    bool active;
-    
-    void init(const char* w, int startCol) {
-        strcpy(word, w);
-        wordLen = strlen(word);
-        row = 1;
-        col = startCol;
-        matchedChars = 0;
-        active = true;
-    }
-    
-    void fall() {
-        row++;
-    }
-    
-    bool hasReachedBottom(int maxRow) {
-        return row >= maxRow;
-    }
-};
+#include "fw_common.h"
+#include "fw_animation.h"
+#include "fw_database.h"
+#include "fw_score.h"
 
 // Game state manager
 class GameState {
@@ -336,6 +20,7 @@ private:
     long long lastSpawnTime;
     long long lastFallTime;
     WordDatabase wordDb;
+    AnimationManager animManager;
     
 public:
     GameState() {
@@ -350,6 +35,19 @@ public:
             words[i].active = false;
         }
         inputBuffer[0] = '\0';
+    }
+    
+    // Find the index of the lowest active word (highest row value)
+    int findLowestWord() {
+        int lowestIdx = -1;
+        int maxRow = -1;
+        for(int i = 0; i < MAX_ACTIVE_WORDS; i++) {
+            if(words[i].active && words[i].row > maxRow) {
+                maxRow = words[i].row;
+                lowestIdx = i;
+            }
+        }
+        return lowestIdx;
     }
     
     void update(long long currentTime, int fallSpeed, int spawnRate) {
@@ -379,13 +77,19 @@ public:
             lastSpawnTime = currentTime;
             spawnWord();
         }
+        
+        // Update animations
+        animManager.update(currentTime);
     }
     
     void spawnWord() {
         for(int i = 0; i < MAX_ACTIVE_WORDS; i++) {
             if(!words[i].active) {
                 const char* word = wordDb.getRandomWord();
-                int col = rand() % (SCREEN_WIDTH - strlen(word));
+                int wordLen = fw_strlen(word);
+                int maxCol = SCREEN_WIDTH - wordLen - 2;
+                if(maxCol < 1) maxCol = 1;
+                int col = (fw_rand() % maxCol) + 1;
                 words[i].init(word, col);
                 return;
             }
@@ -403,7 +107,15 @@ public:
                 inputBuffer[inputLen] = '\0';
                 
                 if(activeWordIndex != -1) {
-                    words[activeWordIndex].matchedChars = inputLen;
+                    FallingWord& active = words[activeWordIndex];
+                    if(active.errorChars > 0) {
+                        active.errorChars--;
+                    } else if(active.matchedChars > 0) {
+                        active.matchedChars--;
+                    }
+                    if(active.matchedChars == 0 && active.errorChars == 0) {
+                        activeWordIndex = -1;
+                    }
                 }
             }
             return true;
@@ -419,58 +131,42 @@ public:
             inputBuffer[inputLen] = '\0';
         }
         
-        // Try to match
+        // Try to match — must type the LOWEST word first
         if(activeWordIndex == -1) {
-            // Find best match (shortest word that matches)
-            int bestMatch = -1;
-            int shortestLen = 999;
+            int lowestIdx = findLowestWord();
             
-            for(int i = 0; i < MAX_ACTIVE_WORDS; i++) {
-                if(words[i].active && words[i].matchedChars == 0) {
-                    bool matches = true;
-                    for(int j = 0; j < inputLen; j++) {
-                        if(words[i].word[j] != inputBuffer[j]) {
-                            matches = false;
-                            break;
-                        }
-                    }
-                    
-                    if(matches && words[i].wordLen < shortestLen) {
-                        shortestLen = words[i].wordLen;
-                        bestMatch = i;
-                    }
+            if(lowestIdx != -1 && words[lowestIdx].matchedChars == 0) {
+                if(words[lowestIdx].word[0] == c) {
+                    activeWordIndex = lowestIdx;
+                    words[activeWordIndex].matchedChars = 1;
+                    words[activeWordIndex].errorChars = 0;
+                } else {
+                    inputLen = 0;
+                    inputBuffer[0] = '\0';
                 }
-            }
-            
-            if(bestMatch != -1) {
-                activeWordIndex = bestMatch;
-                words[activeWordIndex].matchedChars = inputLen;
             } else {
-                // No match, reset input
                 inputLen = 0;
                 inputBuffer[0] = '\0';
             }
         } else {
-            // Continue matching active word
             FallingWord& active = words[activeWordIndex];
             
-            if(active.word[inputLen - 1] == c) {
-                active.matchedChars = inputLen;
+            if(active.errorChars > 0) {
+                active.errorChars++;
+            } else if(active.word[active.matchedChars] == c) {
+                active.matchedChars++;
                 
                 // Word completed?
-                if(inputLen == active.wordLen) {
-                    score += active.wordLen * 10;
+                if(active.matchedChars == active.wordLen) {
+                    score += active.wordLen;
+                    animManager.startAnimation(active, getCurrentTimeMs());
                     active.active = false;
                     activeWordIndex = -1;
                     inputLen = 0;
                     inputBuffer[0] = '\0';
                 }
             } else {
-                // Mismatch
-                active.matchedChars = 0;
-                activeWordIndex = -1;
-                inputLen = 0;
-                inputBuffer[0] = '\0';
+                active.errorChars = 1;
             }
         }
         
@@ -489,9 +185,12 @@ public:
         // Draw score and lives
         term.moveCursor(0, 2);
         term.print("Score: ");
-        printNumber(score);
+        printNumber(term, score);
         term.print("  Lives: ");
-        printNumber(lives);
+        printNumber(term, lives);
+        
+        // Find the lowest word to highlight it
+        int lowestIdx = findLowestWord();
         
         // Draw falling words
         for(int i = 0; i < MAX_ACTIVE_WORDS; i++) {
@@ -499,19 +198,44 @@ public:
                 term.moveCursor(words[i].row, words[i].col);
                 
                 if(i == activeWordIndex) {
-                    term.setColor(32); // Green for active word
+                    // Green for correctly matched chars
+                    term.setColor(32);
                     for(int j = 0; j < words[i].matchedChars; j++) {
                         char ch[2] = {words[i].word[j], '\0'};
                         term.print(ch);
                     }
-                    term.setColor(33); // Yellow for remaining
-                    term.print(words[i].word + words[i].matchedChars);
+                    // Red for error chars
+                    if(words[i].errorChars > 0) {
+                        term.setColor(91);
+                        int errEnd = words[i].matchedChars + words[i].errorChars;
+                        if(errEnd > words[i].wordLen) errEnd = words[i].wordLen;
+                        for(int j = words[i].matchedChars; j < errEnd; j++) {
+                            char ch[2] = {words[i].word[j], '\0'};
+                            term.print(ch);
+                        }
+                        term.setColor(37);
+                        if(errEnd < words[i].wordLen) {
+                            term.print(words[i].word + errEnd);
+                        }
+                    } else {
+                        term.setColor(37);
+                        term.print(words[i].word + words[i].matchedChars);
+                    }
+                    term.resetColor();
+                } else if(i == lowestIdx) {
+                    term.setColor(93); // Bright yellow — type this one!
+                    term.print(words[i].word);
                     term.resetColor();
                 } else {
+                    term.setColor(37); // White for other words
                     term.print(words[i].word);
+                    term.resetColor();
                 }
             }
         }
+        
+        // Draw blast/poof animations
+        animManager.render(term);
         
         // Draw input area
         term.moveCursor(INPUT_ROW, 0);
@@ -525,7 +249,7 @@ public:
         
         // Instructions
         term.moveCursor(SCREEN_HEIGHT - 1, 0);
-        term.print("Type words to destroy them! ESC to quit");
+        term.print("Type the LOWEST word first! ESC to quit");
     }
     
     bool isGameOver() {
@@ -534,68 +258,6 @@ public:
     
     int getScore() {
         return score;
-    }
-    
-private:
-    void printNumber(int n) {
-        if(n == 0) {
-            Terminal term;
-            term.print("0");
-            return;
-        }
-        
-        char buf[16];
-        int len = 0;
-        bool negative = n < 0;
-        if(negative) n = -n;
-        
-        while(n > 0) {
-            buf[len++] = '0' + (n % 10);
-            n /= 10;
-        }
-        
-        if(negative) buf[len++] = '-';
-        
-        Terminal term;
-        for(int i = len - 1; i >= 0; i--) {
-            char ch[2] = {buf[i], '\0'};
-            term.print(ch);
-        }
-    }
-};
-
-// Difficulty manager
-class DifficultyManager {
-private:
-    long long startTime;
-    int baseFallSpeed;
-    int baseSpawnRate;
-    
-public:
-    DifficultyManager() {
-        startTime = getCurrentTimeMs();
-        baseFallSpeed = 500;  // ms per fall
-        baseSpawnRate = 2000; // ms between spawns
-    }
-    
-    int getFallSpeed() {
-        long long elapsed = getCurrentTimeMs() - startTime;
-        int seconds = elapsed / 1000;
-        
-        int speedup = (seconds / 10) * 50;
-        int speed = baseFallSpeed - speedup;
-        
-        return (speed < 100) ? 100 : speed;
-    }
-    
-    int getSpawnRate() {
-        long long elapsed = getCurrentTimeMs() - startTime;
-        int seconds = elapsed / 1000;
-        
-        int speedup = (seconds / 15) * 200;
-        int rate = baseSpawnRate - speedup;
-        
-        return (rate < 800) ? 800 : rate;
     }
 };
 
@@ -610,11 +272,11 @@ private:
 public:
     Game() : running(true) {}
     
-    void run() {
+    int run() {
         terminal.init();
         
         // Seed random with current time
-        srand(getCurrentTimeMs());
+        fw_srand(getCurrentTimeMs());
         
         long long lastUpdate = getCurrentTimeMs();
         
@@ -654,25 +316,8 @@ public:
         terminal.moveCursor(12, 28);
         terminal.print("Final Score: ");
         
-        int score = gameState.getScore();
         char scoreBuf[16];
-        int len = 0;
-        if(score == 0) {
-            scoreBuf[len++] = '0';
-        } else {
-            int temp = score;
-            while(temp > 0) {
-                scoreBuf[len++] = '0' + (temp % 10);
-                temp /= 10;
-            }
-            // Reverse
-            for(int i = 0; i < len / 2; i++) {
-                char t = scoreBuf[i];
-                scoreBuf[i] = scoreBuf[len - 1 - i];
-                scoreBuf[len - 1 - i] = t;
-            }
-        }
-        scoreBuf[len] = '\0';
+        formatNumber(scoreBuf, gameState.getScore());
         terminal.print(scoreBuf);
         
         terminal.moveCursor(14, 25);
@@ -683,12 +328,12 @@ public:
         }
         
         terminal.restore();
+        return gameState.getScore();
     }
 };
 
 // Entry point
 int runFallingWords() {
     Game game;
-    game.run();
-    return 0;
+    return game.run();
 }

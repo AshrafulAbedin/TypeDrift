@@ -6,6 +6,11 @@
 
 class FileHandler {
 public:
+    // Call once from main() with argv[0] to anchor all data paths
+    static void setDataDir(const std::string& executablePath);
+    // Returns an absolute path to a file/dir inside the data directory
+    static std::string getDataPath(const std::string& relative);
+
     // File operations
     static bool fileExists(const std::string& filename);
     static bool createFile(const std::string& filename);
@@ -34,6 +39,9 @@ public:
     // Game info helpers
     static std::string getDifficultyString(int difficulty);
     static std::string getGameModeString(int mode);
+
+private:
+    static std::string s_dataDir; // absolute path to the data/ directory
 };
 
 #endif // FILE_HANDLER_H

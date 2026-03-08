@@ -11,17 +11,53 @@ std::string SessionLogger::getDifficultyString(int difficulty) {
     return "Easy";
 }
 
-std::string SessionLogger::getUserFilePath(const std::string& hashedUserId) {
-    return "../data/users/" + hashedUserId + ".txt";
+std::string SessionLogger::getLegacyFilePath(const std::string& hashedUserId) {
+    return FileHandler::getDataPath("users/" + hashedUserId + ".txt");
 }
+
+std::string SessionLogger::getCareerFilePath(const std::string& hashedUserId) {
+    return FileHandler::getDataPath("users/" + hashedUserId + "/career_stats.txt");
+}
+
+std::string SessionLogger::getFunModeFilePath(const std::string& hashedUserId) {
+    return FileHandler::getDataPath("users/" + hashedUserId + "/funmode_stats.txt");
+}
+
+void SessionLogger::ensureUserDir(const std::string& hashedUserId) {
+    if (!FileHandler::directoryExists(FileHandler::getDataPath(""))) {
+        FileHandler::createDirectory(FileHandler::getDataPath(""));
+    }
+    if (!FileHandler::directoryExists(FileHandler::getDataPath("users"))) {
+        FileHandler::createDirectory(FileHandler::getDataPath("users"));
+    }
+    std::string userDir = FileHandler::getDataPath("users/" + hashedUserId);
+    if (!FileHandler::directoryExists(userDir)) {
+        FileHandler::createDirectory(userDir);
+    }
+}
+
+void SessionLogger::migrateOldUserFile(const std::string& hashedUserId) {
+    std::string legacyPath = getLegacyFilePath(hashedUserId);
+    std::string careerPath = getCareerFilePath(hashedUserId);
+
+    // Only migrate if old file exists and new file doesn't
+    if (FileHandler::fileExists(legacyPath) && !FileHandler::fileExists(careerPath)) {
+        ensureUserDir(hashedUserId);
+        std::string content = FileHandler::readFile(legacyPath);
+        if (!content.empty()) {
+            FileHandler::writeFile(careerPath, content);
+        }
+    }
+}
+
+// ===================== Career mode summary parsing =====================
 
 SessionLogger::SessionSummary SessionLogger::parseSummaryLine(const std::string& line) {
     SessionSummary summary = {0, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0};
 
     if (line.empty()) return summary;
 
-    // Format: best_wpm||avg_easy,avg_medium,avg_hard||total_games
-    // Find first "||"
+    // Format: best_wpm||avg_easy,avg_medium,avg_hard||total_games,easy_count,medium_count,hard_count
     int pos1 = -1;
     for (int i = 0; i < (int)line.size() - 1; i++) {
         if (line[i] == '|' && line[i + 1] == '|') {
@@ -31,7 +67,6 @@ SessionLogger::SessionSummary SessionLogger::parseSummaryLine(const std::string&
     }
     if (pos1 == -1) return summary;
 
-    // Find second "||"
     int pos2 = -1;
     for (int i = pos1 + 2; i < (int)line.size() - 1; i++) {
         if (line[i] == '|' && line[i + 1] == '|') {
@@ -41,14 +76,10 @@ SessionLogger::SessionSummary SessionLogger::parseSummaryLine(const std::string&
     }
     if (pos2 == -1) return summary;
 
-    // Parse best_wpm
     std::string bestWpmStr = line.substr(0, pos1);
     try { summary.bestWpm = std::stoi(bestWpmStr); } catch (...) {}
 
-    // Parse avg WPMs: "avg_easy,avg_medium,avg_hard"
     std::string avgStr = line.substr(pos1 + 2, pos2 - pos1 - 2);
-
-    // Find commas
     int comma1 = -1, comma2 = -1;
     for (int i = 0; i < (int)avgStr.size(); i++) {
         if (avgStr[i] == ',') {
@@ -56,17 +87,13 @@ SessionLogger::SessionSummary SessionLogger::parseSummaryLine(const std::string&
             else { comma2 = i; break; }
         }
     }
-
     if (comma1 != -1 && comma2 != -1) {
         try { summary.avgWpmEasy = std::stof(avgStr.substr(0, comma1)); } catch (...) {}
         try { summary.avgWpmMedium = std::stof(avgStr.substr(comma1 + 1, comma2 - comma1 - 1)); } catch (...) {}
         try { summary.avgWpmHard = std::stof(avgStr.substr(comma2 + 1)); } catch (...) {}
     }
 
-    // Parse total_games
     std::string totalStr = line.substr(pos2 + 2);
-
-    // Check if totalStr contains difficulty counts: "total_games,easy_count,medium_count,hard_count"
     int tc1 = -1, tc2 = -1, tc3 = -1;
     for (int i = 0; i < (int)totalStr.size(); i++) {
         if (totalStr[i] == ',') {
@@ -75,7 +102,6 @@ SessionLogger::SessionSummary SessionLogger::parseSummaryLine(const std::string&
             else { tc3 = i; break; }
         }
     }
-
     if (tc1 != -1 && tc2 != -1 && tc3 != -1) {
         try { summary.totalGames = std::stoi(totalStr.substr(0, tc1)); } catch (...) {}
         try { summary.easyCount = std::stoi(totalStr.substr(tc1 + 1, tc2 - tc1 - 1)); } catch (...) {}
@@ -102,30 +128,75 @@ std::string SessionLogger::buildSummaryLine(const SessionSummary& summary) {
     return oss.str();
 }
 
+// ===================== Fun mode summary parsing =====================
+
+SessionLogger::FunModeSummary SessionLogger::parseFunSummaryLine(const std::string& line) {
+    FunModeSummary summary = {0, 0, 0, 0};
+    if (line.empty()) return summary;
+
+    // Format: Funmode||TimetestChars||NovowelWpm||NovowelAccuracy||FallingBestScore
+    std::vector<std::string> fields;
+    int start = 0;
+    for (int j = 0; j < (int)line.size() - 1; j++) {
+        if (line[j] == '|' && line[j + 1] == '|') {
+            fields.push_back(line.substr(start, j - start));
+            start = j + 2;
+        }
+    }
+    fields.push_back(line.substr(start));
+
+    // fields[0] = "Funmode", fields[1..4] = values
+    if (fields.size() >= 5) {
+        try { summary.bestTimetestChars = std::stoi(fields[1]); } catch (...) {}
+        try { summary.bestNovowelWpm = std::stoi(fields[2]); } catch (...) {}
+        try { summary.bestNovowelAccuracy = std::stoi(fields[3]); } catch (...) {}
+        try { summary.bestFallingScore = std::stoi(fields[4]); } catch (...) {}
+    }
+
+    return summary;
+}
+
+std::string SessionLogger::buildFunSummaryLine(const FunModeSummary& summary) {
+    std::ostringstream oss;
+    oss << "Funmode||"
+        << summary.bestTimetestChars << "||"
+        << summary.bestNovowelWpm << "||"
+        << summary.bestNovowelAccuracy << "||"
+        << summary.bestFallingScore;
+    return oss.str();
+}
+
+// ===================== Session count =====================
+
 int SessionLogger::loadSessionCount(const std::string& hashedUserId) {
-    std::string filepath = getUserFilePath(hashedUserId);
+    std::string filepath = getCareerFilePath(hashedUserId);
     std::vector<std::string> lines = FileHandler::readLines(filepath);
+    if (lines.empty()) {
+        // Try legacy
+        filepath = getLegacyFilePath(hashedUserId);
+        lines = FileHandler::readLines(filepath);
+    }
     if (lines.empty()) return 0;
 
     SessionSummary summary = parseSummaryLine(lines[0]);
     return summary.totalGames;
 }
 
+// ===================== Career mode logging =====================
+
 bool SessionLogger::logSession(const std::string& hashedUserId,
                                 const std::string& modeName,
                                 int difficulty,
                                 int wpm,
                                 int accuracy) {
-    std::string filepath = getUserFilePath(hashedUserId);
-    std::string diffStr = getDifficultyString(difficulty);
+    // Ensure user directory exists
+    ensureUserDir(hashedUserId);
 
-    // Ensure directories exist
-    if (!FileHandler::directoryExists("../data")) {
-        FileHandler::createDirectory("../data");
-    }
-    if (!FileHandler::directoryExists("../data/users")) {
-        FileHandler::createDirectory("../data/users");
-    }
+    // Migrate old file if needed
+    migrateOldUserFile(hashedUserId);
+
+    std::string filepath = getCareerFilePath(hashedUserId);
+    std::string diffStr = getDifficultyString(difficulty);
 
     // Read existing file content
     std::vector<std::string> lines = FileHandler::readLines(filepath);
@@ -179,5 +250,71 @@ bool SessionLogger::logSession(const std::string& hashedUserId,
     fileContent << entryOss.str() << "\n";
 
     // Write the entire file
+    return FileHandler::writeFile(filepath, fileContent.str());
+}
+
+// ===================== Fun mode logging =====================
+
+bool SessionLogger::logFunSession(const std::string& hashedUserId,
+                                   const std::string& gameName,
+                                   int wpm,
+                                   int accuracy,
+                                   int score) {
+    // Ensure user directory exists
+    ensureUserDir(hashedUserId);
+
+    std::string filepath = getFunModeFilePath(hashedUserId);
+
+    // Read existing file content
+    std::vector<std::string> lines = FileHandler::readLines(filepath);
+
+    // Parse or create fun mode summary
+    FunModeSummary funSummary = {0, 0, 0, 0};
+    if (!lines.empty()) {
+        funSummary = parseFunSummaryLine(lines[0]);
+    }
+
+    // Update best scores based on game type
+    if (gameName == "TimeTest") {
+        if (score > funSummary.bestTimetestChars) {
+            funSummary.bestTimetestChars = score;
+        }
+    } else if (gameName == "VowelGame") {
+        if (wpm > funSummary.bestNovowelWpm) {
+            funSummary.bestNovowelWpm = wpm;
+        }
+        if (accuracy > funSummary.bestNovowelAccuracy) {
+            funSummary.bestNovowelAccuracy = accuracy;
+        }
+    } else if (gameName == "FallingWords") {
+        if (score > funSummary.bestFallingScore) {
+            funSummary.bestFallingScore = score;
+        }
+    }
+
+    // Build the new entry line
+    std::ostringstream entryOss;
+    if (gameName == "FallingWords") {
+        entryOss << "Fun mode||" << gameName << "||" << score;
+    } else if (gameName == "TimeTest") {
+        entryOss << "Fun mode||" << gameName << "||" << score << " chars";
+    } else {
+        entryOss << "Fun mode||" << gameName << "||" << wpm << "||" << accuracy;
+    }
+
+    // Build the full file content
+    std::ostringstream fileContent;
+    fileContent << buildFunSummaryLine(funSummary) << "\n";
+
+    // Append existing game entries (lines 1+)
+    for (int i = 1; i < (int)lines.size(); i++) {
+        if (!lines[i].empty()) {
+            fileContent << lines[i] << "\n";
+        }
+    }
+
+    // Append new entry
+    fileContent << entryOss.str() << "\n";
+
     return FileHandler::writeFile(filepath, fileContent.str());
 }

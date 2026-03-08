@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <sys/stat.h> // For directory operations
+#include <filesystem>
 
 #ifdef _WIN32 //For Windows
     #include <direct.h>
@@ -12,6 +13,30 @@
     #define MKDIR(a) mkdir(a, 0755)
 #endif
 
+// Static member definition
+std::string FileHandler::s_dataDir = "../data"; // fallback if setDataDir not called
+
+void FileHandler::setDataDir(const std::string& executablePath) {
+    // Resolve the executable's directory, then go up one level to find data/
+    try {
+        std::filesystem::path exePath = std::filesystem::canonical(executablePath);
+        // data/ is a sibling of the build/ dir, i.e. one level up from the exe
+        std::filesystem::path dataDir = exePath.parent_path().parent_path() / "data";
+        s_dataDir = dataDir.string();
+    } catch (...) {
+        // fallback: keep default
+        s_dataDir = "../data";
+    }
+}
+
+std::string FileHandler::getDataPath(const std::string& relative) {
+    if (relative.empty()) return s_dataDir;
+    // Avoid double-slash
+    if (relative[0] == '/' || relative[0] == '\\') {
+        return s_dataDir + relative;
+    }
+    return s_dataDir + "/" + relative;
+}
 
 bool FileHandler::fileExists(const std::string& filename) {
     std::ifstream file(filename); // ifstream input file stream tries to read to file
@@ -89,36 +114,46 @@ bool FileHandler::createDirectory(const std::string& path) {
 
 // User-specific operations
 bool FileHandler::saveUserData(const std::string& user_id, const std::string& data) {
-    std::string data_dir = "../data";
-    std::string user_dir = "../data/users/";
-    std::string filename = user_dir + user_id + ".txt";
-    
-    if(!directoryExists(data_dir)){
-        if(!createDirectory(data_dir)){
-            std ::cerr << "failed\n";
+    std::string data_dir = getDataPath("");
+    std::string user_dir = getDataPath("users");
+    std::string user_subdir = getDataPath("users/" + user_id);
+
+    if (!directoryExists(data_dir)) {
+        if (!createDirectory(data_dir)) {
+            std::cerr << "Failed to create data directory: " << data_dir << "\n";
             return false;
         }
     }
-    // Ensure directory exists
     if (!directoryExists(user_dir)) {
-        createDirectory(user_dir);
+        if (!createDirectory(user_dir)) {
+            std::cerr << "Failed to create users directory: " << user_dir << "\n";
+            return false;
+        }
     }
-    
-    return writeFile(filename, data);
+    // Only create the user's sub-directory; no flat .txt file is written.
+    if (!directoryExists(user_subdir)) {
+        if (!createDirectory(user_subdir)) {
+            std::cerr << "Failed to create user directory: " << user_subdir << "\n";
+            return false;
+        }
+    }
+    return true;
 }
 
 std::string FileHandler::loadUserData(const std::string& user_id) {
-    std::string filename = "../data/users/" + user_id + ".txt";
-    return readFile(filename);
+    // Stats are stored in career_stats.txt and funmode_stats.txt inside the user directory.
+    // This function is kept for compatibility but returns empty; callers use session_logger directly.
+    return "";
 }
 
 bool FileHandler::userFileExists(const std::string& user_id) {
-    std::string filename = "../data/users/" + user_id + ".txt";
-    return fileExists(filename);
+    // A user exists if their sub-directory exists under data/users/
+    std::string user_subdir = getDataPath("users/" + user_id);
+    return directoryExists(user_subdir);
 }
 
 std::string FileHandler::findUserPasswordInRegistry(const std::string& user_id) {
-    auto lines = FileHandler::readLines("../data/users.txt");
+    auto lines = FileHandler::readLines(getDataPath("users.txt"));
     
     const int FIELD_LENGTH = 23;
     const int EXPECTED_LINE_LENGTH = FIELD_LENGTH * 3 + 2; // 3 fields + 2 spaces
@@ -138,8 +173,9 @@ std::string FileHandler::findUserPasswordInRegistry(const std::string& user_id) 
     
     return "";
 }
+
 std::string FileHandler::getUserNameFromRegistry(const std::string& user_id) {
-    auto lines = FileHandler::readLines("../data/users.txt");
+    auto lines = FileHandler::readLines(getDataPath("users.txt"));
     
     const int FIELD_LENGTH = 23;
     const int EXPECTED_LINE_LENGTH = FIELD_LENGTH * 3 + 2; // 3 fields + 2 spaces
