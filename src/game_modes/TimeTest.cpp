@@ -140,7 +140,7 @@ TestResults runTimeTest() {
     int fileindex = (current_time % 50) + 1;
 
     char filename[100];
-    const char base_path[] = "../data/texts/medium/medium";
+    const char base_path[] = "../data/texts/time_txt/time";
     int fi = 0;
     while (base_path[fi] != '\0') {
         filename[fi] = base_path[fi];
