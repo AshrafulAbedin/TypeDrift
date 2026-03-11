@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/luimas834/Desktop/TypeDrift/src -I/home/luimas834/Desktop/TypeDrift/src/auth -I/home/luimas834/Desktop/TypeDrift/src/game_modes -I/home/luimas834/Desktop/TypeDrift/src/utils -I/home/luimas834/Desktop/TypeDrift/src/core
+CXX_INCLUDES = -I/home/asrafulfardin/TypeDrift/src -I/home/asrafulfardin/TypeDrift/src/auth -I/home/asrafulfardin/TypeDrift/src/game_modes -I/home/asrafulfardin/TypeDrift/src/utils -I/home/asrafulfardin/TypeDrift/src/core
 
 CXX_FLAGS = -std=gnu++17
 

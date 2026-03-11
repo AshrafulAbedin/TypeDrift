@@ -1,7 +1,7 @@
 CMakeFiles/TypeDrift.dir/src/game_modes/TerminalSetup.cpp.o: \
- /home/luimas834/Desktop/TypeDrift/src/game_modes/TerminalSetup.cpp \
+ /home/asrafulfardin/TypeDrift/src/game_modes/TerminalSetup.cpp \
  /usr/include/stdc-predef.h \
- /home/luimas834/Desktop/TypeDrift/src/game_modes/TerminalSetup.h \
+ /home/asrafulfardin/TypeDrift/src/game_modes/TerminalSetup.h \
  /usr/include/c++/15.2.1/iostream \
  /usr/include/c++/15.2.1/bits/requires_hosted.h \
  /usr/include/c++/15.2.1/x86_64-pc-linux-gnu/bits/c++config.h \

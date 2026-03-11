@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/luimas834/Desktop/TypeDrift
+CMAKE_SOURCE_DIR = /home/asrafulfardin/TypeDrift
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/luimas834/Desktop/TypeDrift/build
+CMAKE_BINARY_DIR = /home/asrafulfardin/TypeDrift/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/luimas834/Desktop/TypeDrift/build/CMakeFiles /home/luimas834/Desktop/TypeDrift/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/asrafulfardin/TypeDrift/build/CMakeFiles /home/asrafulfardin/TypeDrift/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/luimas834/Desktop/TypeDrift/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/asrafulfardin/TypeDrift/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
