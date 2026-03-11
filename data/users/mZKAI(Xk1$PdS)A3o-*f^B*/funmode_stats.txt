@@ -1,0 +1,7 @@
+Funmode||0||11||100||16
+Fun mode||FallingWords||0
+Fun mode||FallingWords||16
+Fun mode||VowelGame||7||13
+Fun mode||VowelGame||5||13
+Fun mode||VowelGame||11||100
+Fun mode||VowelGame||10||14
