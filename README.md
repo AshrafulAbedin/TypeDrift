@@ -22,7 +22,7 @@ This project was built focusing on modern software engineering practices:
 * **Security & Hashing:** Developed a custom user authentication system using secure hashing algorithms to protect user data.
 * **Data Persistence:** Efficient file handling for saving user profiles, session history, and leaderboards.
 * **Modern Build Systems:** Cross-platform compatibility managed via **CMake**.
-* **Linux/Windows Optimized:** Designed to run seamlessly in Windows Git Bash (MINGW64) and Linux environments.
+* **Linux Optimized:** Designed to run seamlessly in Linux environments.
 
 ---
 
@@ -63,8 +63,6 @@ cmake --build .
 # Linux / macOS
 ./TypeDrift
 
-# Windows (Git Bash / MINGW64)
-.\TypeDrift.exe
 ```
 
 ---
