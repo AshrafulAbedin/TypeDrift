@@ -14,7 +14,7 @@ std::string Leaderboard::getDifficultyString(int difficulty) {
     return "Easy";
 }
 
-// ===================== Career mode paths =====================
+// Career mode paths 
 
 std::string Leaderboard::getLeaderboardFilePath(int difficulty) {
     if (difficulty == 1) return FileHandler::getDataPath("leaderboards/career/easy.txt");
@@ -23,7 +23,7 @@ std::string Leaderboard::getLeaderboardFilePath(int difficulty) {
     return FileHandler::getDataPath("leaderboards/career/easy.txt");
 }
 
-// ===================== Fun mode paths =====================
+// Fun mode paths 
 
 std::string Leaderboard::getFunLeaderboardFilePath(const std::string& gameName) {
     return FileHandler::getDataPath("leaderboards/funmode/" + gameName + ".txt");
@@ -36,7 +36,7 @@ std::string Leaderboard::getFunGameDisplayName(const std::string& gameName) {
     return gameName;
 }
 
-// ===================== Shared parsing =====================
+// Shared parsing 
 
 std::vector<Leaderboard::LeaderboardEntry> Leaderboard::parseLeaderboardFile(const std::string& filepath) {
     std::vector<LeaderboardEntry> entries;
@@ -81,7 +81,7 @@ bool Leaderboard::writeLeaderboardFile(const std::string& filepath, const std::v
     return FileHandler::writeFile(filepath, oss.str());
 }
 
-// ===================== Career mode submit =====================
+// Career mode submit 
 
 bool Leaderboard::submitScore(const std::string& userId, int difficulty, int wpm, int accuracy) {
     // Ensure directories exist
@@ -95,26 +95,6 @@ bool Leaderboard::submitScore(const std::string& userId, int difficulty, int wpm
         FileHandler::createDirectory(FileHandler::getDataPath("leaderboards/career"));
     }
 
-    // Migrate old leaderboard files if they exist
-    // Check if old files exist at old location and new dir doesn't have them
-    std::string oldPaths[] = {
-        FileHandler::getDataPath("leaderboards/easy.txt"),
-        FileHandler::getDataPath("leaderboards/medium.txt"),
-        FileHandler::getDataPath("leaderboards/hard.txt")
-    };
-    std::string newPaths[] = {
-        FileHandler::getDataPath("leaderboards/career/easy.txt"),
-        FileHandler::getDataPath("leaderboards/career/medium.txt"),
-        FileHandler::getDataPath("leaderboards/career/hard.txt")
-    };
-    for (int i = 0; i < 3; i++) {
-        if (FileHandler::fileExists(oldPaths[i]) && !FileHandler::fileExists(newPaths[i])) {
-            std::string content = FileHandler::readFile(oldPaths[i]);
-            if (!content.empty()) {
-                FileHandler::writeFile(newPaths[i], content);
-            }
-        }
-    }
 
     std::string filepath = getLeaderboardFilePath(difficulty);
 
@@ -122,9 +102,28 @@ bool Leaderboard::submitScore(const std::string& userId, int difficulty, int wpm
 
     std::vector<LeaderboardEntry> entries = parseLeaderboardFile(filepath);
 
-    if ((int)entries.size() >= MAX_ENTRIES && !entries.empty()) {
-        if (score <= entries[entries.size() - 1].score) {
-            return false;
+    // Find and remove the user's existing entry (keep only personal best)
+    int existingIdx = -1;
+    for (int i = 0; i < (int)entries.size(); i++) {
+        if (entries[i].userId == userId) {
+            existingIdx = i;
+            break;
+        }
+    }
+
+    if (existingIdx != -1) {
+        // User already has an entry — only update if new score is better
+        if (score <= entries[existingIdx].score) {
+            return false; // No improvement, don't update
+        }
+        // Remove the old entry so we can re-insert at the correct rank
+        entries.erase(entries.begin() + existingIdx);
+    } else {
+        // No existing entry — check if leaderboard is full
+        if ((int)entries.size() >= MAX_ENTRIES && !entries.empty()) {
+            if (score <= entries[entries.size() - 1].score) {
+                return false;
+            }
         }
     }
 
@@ -180,9 +179,28 @@ bool Leaderboard::submitFunScore(const std::string& userId, const std::string& g
 
     std::vector<LeaderboardEntry> entries = parseLeaderboardFile(filepath);
 
-    if ((int)entries.size() >= MAX_ENTRIES && !entries.empty()) {
-        if (score <= entries[entries.size() - 1].score) {
-            return false;
+    // Find and remove the user's existing entry (keep only personal best)
+    int existingIdx = -1;
+    for (int i = 0; i < (int)entries.size(); i++) {
+        if (entries[i].userId == userId) {
+            existingIdx = i;
+            break;
+        }
+    }
+
+    if (existingIdx != -1) {
+        // User already has an entry — only update if new score is better
+        if (score <= entries[existingIdx].score) {
+            return false; // No improvement, don't update
+        }
+        // Remove the old entry so we can re-insert at the correct rank
+        entries.erase(entries.begin() + existingIdx);
+    } else {
+        // No existing entry — check if leaderboard is full
+        if ((int)entries.size() >= MAX_ENTRIES && !entries.empty()) {
+            if (score <= entries[entries.size() - 1].score) {
+                return false;
+            }
         }
     }
 
@@ -209,7 +227,7 @@ bool Leaderboard::submitFunScore(const std::string& userId, const std::string& g
     return writeLeaderboardFile(filepath, entries);
 }
 
-// ===================== Career mode display =====================
+// Career mode display 
 
 std::vector<Leaderboard::LeaderboardEntry> Leaderboard::loadLeaderboard(int difficulty) {
     std::string filepath = getLeaderboardFilePath(difficulty);
@@ -220,14 +238,25 @@ void Leaderboard::displayLeaderboard(int difficulty) {
     std::string diffStr = getDifficultyString(difficulty);
     std::vector<LeaderboardEntry> entries = loadLeaderboard(difficulty);
 
-    std::cout << "\n";
-    std::cout << BOLD << CYAN << "    ╔══════════════════════════════════════════════════╗" << RESET << "\n";
-    std::cout << BOLD << CYAN << "    ║         " << diffStr << " LEADERBOARD";
-    // Pad to fill the box
-    int padLen = 32 - (int)diffStr.size();
-    for (int i = 0; i < padLen; i++) std::cout << " ";
-    std::cout << "║" << RESET << "\n";
-    std::cout << BOLD << CYAN << "    ╚══════════════════════════════════════════════════╝" << RESET << "\n\n";
+   std::cout << CLEAR_SCREEN;
+                    std::cout << "\n";
+                    std::cout << BOLD << CYAN;
+    if(diffStr == "Easy"){
+                    std::cout << "    ╔══════════════════════════════════════╗\n";
+                    std::cout << "    ║           EASY LEADERBOARD           ║\n";
+                    std::cout << "    ╚══════════════════════════════════════╝\n";
+        }
+    else if(diffStr == "Medium"){
+                    std::cout << "    ╔══════════════════════════════════════╗\n";
+                    std::cout << "    ║           MEDIUM LEADERBOARD         ║\n";
+                    std::cout << "    ╚══════════════════════════════════════╝\n";
+        }
+    else if(diffStr == "Hard"){
+                    std::cout << "    ╔══════════════════════════════════════╗\n";
+                    std::cout << "    ║           HARD LEADERBOARD           ║\n";
+                    std::cout << "    ╚══════════════════════════════════════╝\n";
+        }
+                    std::cout << RESET << "\n";
 
     if (entries.empty()) {
         std::cout << GRAY << "    No entries yet." << RESET << "\n";
@@ -270,7 +299,7 @@ void Leaderboard::displayLeaderboard(int difficulty) {
     std::cout << "\n";
 }
 
-// ===================== Fun mode display =====================
+// Fun mode display 
 
 std::vector<Leaderboard::LeaderboardEntry> Leaderboard::loadFunLeaderboard(const std::string& gameName) {
     std::string filepath = getFunLeaderboardFilePath(gameName);
@@ -281,13 +310,25 @@ void Leaderboard::displayFunLeaderboard(const std::string& gameName) {
     std::string displayName = getFunGameDisplayName(gameName);
     std::vector<LeaderboardEntry> entries = loadFunLeaderboard(gameName);
 
-    std::cout << "\n";
-    std::cout << BOLD << MAGNETA << "    ╔══════════════════════════════════════════════════╗" << RESET << "\n";
-    std::cout << BOLD << MAGNETA << "    ║     " << displayName << " LEADERBOARD";
-    int padLen = 36 - (int)displayName.size();
-    for (int i = 0; i < padLen; i++) std::cout << " ";
-    std::cout << "║" << RESET << "\n";
-    std::cout << BOLD << MAGNETA << "    ╚══════════════════════════════════════════════════╝" << RESET << "\n\n";
+    std::cout << CLEAR_SCREEN;
+                    std::cout << "\n";
+                    std::cout << BOLD << CYAN;
+    if(displayName == "Falling Words"){
+                    std::cout << "    ╔══════════════════════════════════════╗\n";
+                    std::cout << "    ║       FALLING WORDS LEADERBOARD      ║\n";
+                    std::cout << "    ╚══════════════════════════════════════╝\n";
+        }
+    else if(displayName == "Timed Test"){
+                    std::cout << "    ╔══════════════════════════════════════╗\n";
+                    std::cout << "    ║        TIMED TEST LEADERBOARD        ║\n";
+                    std::cout << "    ╚══════════════════════════════════════╝\n";
+        }
+    else if(displayName == "No Vowel Game"){
+                    std::cout << "    ╔══════════════════════════════════════╗\n";
+                    std::cout << "    ║       NO VOWEL GAME LEADERBOARD      ║\n";
+                    std::cout << "    ╚══════════════════════════════════════╝\n";
+    }
+        std::cout << RESET << "\n";
 
     if (entries.empty()) {
         std::cout << GRAY << "    No entries yet." << RESET << "\n";
@@ -328,7 +369,7 @@ void Leaderboard::displayFunLeaderboard(const std::string& gameName) {
         if (isFalling) {
             std::cout << std::setw(10) << (int)entries[i].score;
         } else if (isTimeTest) {
-            std::cout << std::setw(12) << (int)entries[i].score << " chars";
+            std::cout << std::setw(12) << (int)entries[i].score;
         } else {
             std::cout << std::setw(8) << entries[i].wpm
                       << std::setw(10) << entries[i].accuracy
