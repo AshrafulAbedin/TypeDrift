@@ -1,26 +1,42 @@
 #include "vowel_game.h"
 #include "TerminalSetup.h"
-#include "SpeedTest.h" // For TestResults struct
 #include <iostream>
-#include <string>
-#include <../utils/file_helper.h>
-#include <unistd.h> // for read/write if needed, but TerminalSetup abstracts most
+#include "file_helper.h"
+#include <cstdlib> // For rand
 
 using namespace std;
 
-// Helper to check if a character is a vowel
+// Struct for falling animation particles
+struct VowelParticle {
+    char c;
+    double x;
+    double y;
+    double vy; // velocity
+    bool active;
+};
+const int MAX_PARTICLES = 30;
+
+// Helper function to check if a character is a vowel
 bool isVowel(char c) {
-    c = tolower(c);
-    return (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u');
+    return (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' ||
+            c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U');
+}
+
+// Helper to check if the user typed correctly
+bool isCorrectVG(char user_c, char ref_c) {
+    if (isVowel(ref_c)) {
+        return user_c == ' ';
+    }
+    return user_c == ref_c;
 }
 
 // Helper function to display the typing screen
-void vowel_displayScreen(const char reference[], char userInput[], int userLen, int refLen,
-                    double timePassed, int totalMistakes, bool timerStarted){
+void displayScreenVG(const char reference[], char userInput[], int userLen, int refLen,
+                    double timePassed, int totalMistakes, bool timerStarted, VowelParticle particles[]){
     
     clearScreen();
-    cout << BOLD << MAGNETA << "=== NO VOWEL GAME ===" << RESET << endl;
-    cout << ITALIC << GRAY << "Type the text normally but REPLACE ALL VOWELS WITH SPACE!" << RESET << endl;
+    cout << BOLD << WHITE << "=== VOWEL GAME ===" << RESET << endl;
+    cout << GRAY << "Type the text, but press SPACE BAR instead of any vowel!" << RESET << endl;
     
     // Stats line
     if (timerStarted) {
@@ -34,7 +50,7 @@ void vowel_displayScreen(const char reference[], char userInput[], int userLen, 
         }
         cout << endl;
     } else {
-        cout << GRAY << "Start typing to begin... (Example: 'apple' -> ' ppl ')" << RESET << endl;
+        cout << GRAY << "Start typing to begin..." << RESET << endl;
     }
     
     cout << endl;
@@ -48,35 +64,20 @@ void vowel_displayScreen(const char reference[], char userInput[], int userLen, 
     // User typing with cursor
     cout << "You:  ";
     for (int i = 0; i < userLen; i++) {
-        char correctChar = isVowel(reference[i]) ? ' ' : reference[i];
-        
         if (i < refLen) {
-            if (userInput[i] == correctChar) {
-                if (correctChar == ' ') {
-                    // Highlight space clearly
-                    cout << BG_BRIGHT_BLUE << " " << RESET; // Blue background for spaces
-                }
+            if (isCorrectVG(userInput[i], reference[i])) {
+                cout << BRIGHT_YELLOW << reference[i] << RESET; // show the actual character not space
             } else {
-                // Wrong input
-                // If user typed ' ' but it wasn't a vowel spot, or vice versa
-                if (reference[i] == ' ') {
-                   cout << BRIGHT_RED << userInput[i] << RESET; 
-                } else {
-                    cout << BRIGHT_RED << BOLD << reference[i] << RESET;
-                }
+                cout << BRIGHT_RED << BOLD << reference[i] << RESET;
             }
         } else {
             cout << RED << reference[i] << RESET;
         }
     }
 
-    // Cursor
+    // Cursor - changed from block cursor to underline to remove the 'blue box'
     if (userLen < refLen) {
-        cout << BRIGHT_MAGENTA << BOLD << BLACK;
-        char next = reference[userLen];
-        // Show what should be typed? Or just the original char
-        cout << next << RESET;
-        
+        cout << UNDERLINE << BRIGHT_CYAN << reference[userLen] << RESET;
         cout << GRAY;
         for (int i = userLen + 1; i < refLen; i++) {
             cout << reference[i];
@@ -88,18 +89,51 @@ void vowel_displayScreen(const char reference[], char userInput[], int userLen, 
     // Progress
     cout << endl;
     cout << "Progress: " << userLen << "/" << refLen << " characters" << endl;
-    int percent = (refLen > 0) ? (userLen*100)/refLen : 0;
-    cout<<"Progress: "<< percent<<" % "<<endl;
+    int percent = refLen > 0 ? (userLen * 100) / refLen : 0;
+    cout << "Progress: " << percent << " % " << endl;
+    cout << endl;
+
+    // Render falling tiles (vowels) animation area below progress
+    char animBuffer[6][80];
+    for (int r = 0; r < 6; r++) {
+        for (int c = 0; c < 80; c++) animBuffer[r][c] = ' ';
+    }
     
+    for (int p = 0; p < MAX_PARTICLES; p++) {
+        if (particles[p].active) {
+            int r = (int)particles[p].y;
+            int c = (int)particles[p].x;
+            if (r >= 0 && r < 6 && c >= 0 && c < 80) {
+                 animBuffer[r][c] = particles[p].c;
+            }
+        }
+    }
+    
+    for (int r = 0; r < 6; r++) {
+        for (int c = 0; c < 80; c++) {
+            if (animBuffer[r][c] != ' ') {
+                char ch = animBuffer[r][c];
+                if (ch == 'a' || ch == 'A') cout << BRIGHT_CYAN << BOLD << ch << RESET;
+                else if (ch == 'e' || ch == 'E') cout << BRIGHT_GREEN << BOLD << ch << RESET;
+                else if (ch == 'i' || ch == 'I') cout << BRIGHT_YELLOW << BOLD << ch << RESET;
+                else if (ch == 'o' || ch == 'O') cout << BRIGHT_MAGENTA << BOLD << ch << RESET;
+                else cout << BRIGHT_RED << BOLD << ch << RESET;
+            } else {
+                cout << ' ';
+            }
+        }
+        cout << endl;
+    }
+
     cout.flush();
 }
 
-void vowel_displayResults(const TestResults& results) {
+void displayResultsVG(const TestResults& results) {
     clearScreen();
     
     cout << endl;
     cout << BOLD << CYAN << "  ================================" << RESET << endl;
-    cout << BOLD << CYAN << "       NO VOWEL GAME RESULTS      " << RESET << endl;
+    cout << BOLD << CYAN << "         VOWEL GAME RESULTS       " << RESET << endl;
     cout << BOLD << CYAN << "  ================================" << RESET << endl;
     cout << endl;
     
@@ -138,6 +172,15 @@ void vowel_displayResults(const TestResults& results) {
     cout << BOLD << CYAN << "  ================================" << RESET << endl;
     cout << endl;
     
+    // Performance message based on WPM and accuracy
+    if (results.accuracy >= 95 && results.wpm >= 60) {
+        cout << GREEN << "  Excellent! You are a vowel master >_<!" << RESET << endl;
+    } else if (results.accuracy >= 85 && results.wpm >= 40) {
+        cout << YELLOW << "  Good job! Keep practicing ! ;-;" << RESET << endl;
+    } else {
+        cout << CYAN << "  Keep going! You should do better -.-" << RESET << endl;
+    }
+    
     cout << endl;
     cout << "  " << GRAY << "Press any key to return to menu..." << RESET << endl;
     cout << endl;
@@ -146,34 +189,31 @@ void vowel_displayResults(const TestResults& results) {
 }
 
 TestResults vowel_run() {
+
     setTerminal();
     
-    TestResults results = {0, 0, 0.0, 0, 0, 0, 0};
+    TestResults results = {0, 0, 0.0, 0, 0, 0, 0, 0};
 
+    // Pick a random file index from 1 to 50
     long current_time = (long)getCurrentTime();
-    // 25 files available (n_vwl1 to n_vwl25)
-    int fileindex = (current_time % 25) + 1;
+    srand((unsigned)current_time);
+    int fileindex = (current_time % 50) + 1;
 
-    // Use requested folder: data/no_vowel_txt
-    // Assuming executable is in build/ or root - typically we look for ../data or data
-    // SpeedTest uses ../data/texts.
-    // Let's try ../data/no_vowel_txt first as it matches SpeedTest structure
-    
+    // Build the folder name
     char filename[100];
-    const char* folder = "../data/no_vowel_txt/n_vwl";
-
-    // Copy folder path into filename
+    const char* folder = "../data/texts/no_vowel_txt/n_vwl";
+    
     int i = 0;
     while (folder[i] != '\0') {
         filename[i] = folder[i];
         i++;
     }
 
-    // Append the file number
-    string numStr = to_string(fileindex);
-    for(char c : numStr) {
-        filename[i++] = c;
+    // Append the file number (1-50)
+    if (fileindex >= 10) {
+        filename[i++] = '0' + (fileindex / 10);
     }
+    filename[i++] = '0' + (fileindex % 10);
 
     // Append .txt
     filename[i++] = '.';
@@ -184,16 +224,10 @@ TestResults vowel_run() {
     
     // Load reference text
     string text = FileHandler::readFile(filename);
-    
-    // Fallback if file not found
-    if (text.empty()) {
-        text = "The quick brown fox jumps over the lazy dog"; // Fallback text
-    }
-    
     const char* referenceText = text.c_str();
     int refLen = getLength(referenceText);
     
-    char userInput[500];
+    char userInput[2000]; // Make it slightly larger just in case
     int userLen = 0;
         
     // Reset for each session
@@ -204,8 +238,12 @@ TestResults vowel_run() {
     double startTime = 0;
     double timePassed = 0;
     bool timerStarted = false;
+
+    // Setup animation particles
+    VowelParticle particles[MAX_PARTICLES];
+    for(int p=0; p<MAX_PARTICLES; p++) particles[p].active = false;
     
-    vowel_displayScreen(referenceText, userInput, userLen, refLen, 0, 0, false);
+    displayScreenVG(referenceText, userInput, userLen, refLen, 0, 0, false, particles);
     
     // Typing loop
     bool typing = true;
@@ -213,15 +251,27 @@ TestResults vowel_run() {
         // Update timer
         if (timerStarted) {
             timePassed = getCurrentTime() - startTime;
-            vowel_displayScreen(referenceText, userInput, userLen, refLen,
-                               timePassed, totalMistakes, timerStarted);
+        }
+
+        // Update particle physics (~50ms elapsed per block)
+        if (timerStarted) {
+            double dt = 0.05; 
+            for (int p = 0; p < MAX_PARTICLES; p++) {
+                if (particles[p].active) {
+                    particles[p].y += particles[p].vy * dt;
+                    particles[p].vy += 12.0 * dt; // gravity
+                    if (particles[p].y > 6.0) particles[p].active = false; // Despawn
+                }
+            }
+            displayScreenVG(referenceText, userInput, userLen, refLen,
+                               timePassed, totalMistakes, timerStarted, particles);
         }
         
         // Check for keypress
         if (isKeyPressed()) {
             char ch = readKey();
             
-            // Start timer on first printable char (or space)
+            // Start timer on first printable char
             if (!timerStarted && ch >= 32 && ch <= 126) {
                 startTime = getCurrentTime();
                 timerStarted = true;
@@ -243,25 +293,34 @@ TestResults vowel_run() {
                 totalKeystrokes++;
                 
                 if (userLen < refLen) {
-                    // Logic: If ref is vowel, expect space. If ref is consonant, expect consonant.
-                    char expectedChar = isVowel(referenceText[userLen]) ? ' ' : referenceText[userLen];
-                    
-                    if (ch != expectedChar) {
+                    if (!isCorrectVG(ch, referenceText[userLen])) {
                         totalMistakes++;
+                    } else if (isVowel(referenceText[userLen])) {
+                        // Vowel accurately hit! Pop it off!
+                        for (int p = 0; p < MAX_PARTICLES; p++) {
+                            if (!particles[p].active) {
+                                particles[p].active = true;
+                                particles[p].c = referenceText[userLen];
+                                particles[p].x = (userLen % 60) + 10; // keep inside roughly
+                                particles[p].y = 0.0;
+                                particles[p].vy = -3.0 - ((rand() % 20) / 10.0); // jump up slightly and vary
+                                break;
+                            }
+                        }
                     }
                 } else {
                     totalMistakes++;
                 }
                 
-                if (userLen < 499) {
+                if (userLen < 1999) {
                     userInput[userLen] = ch;
                     userLen++;
                     userInput[userLen] = '\0';
                 }
             }
             
-            vowel_displayScreen(referenceText, userInput, userLen, refLen,
-                               timePassed, totalMistakes, timerStarted);
+            displayScreenVG(referenceText, userInput, userLen, refLen,
+                               timePassed, totalMistakes, timerStarted, particles);
         }
     }
     
@@ -272,9 +331,8 @@ TestResults vowel_run() {
     int correct = 0;
     int checkLen = (userLen < refLen) ? userLen : refLen;
     
-    for (int i = 0; i < checkLen; i++) {
-        char expectedChar = isVowel(referenceText[i]) ? ' ' : referenceText[i];
-        if (userInput[i] == expectedChar) {
+    for (int j = 0; j < checkLen; j++) {
+        if (isCorrectVG(userInput[j], referenceText[j])) {
             correct++;
         }
     }
@@ -285,6 +343,7 @@ TestResults vowel_run() {
     results.keystrokes = totalKeystrokes;
     results.correct_chars = correct;
     results.total_chars = refLen;
+    results.chars_typed = userLen;
     
     // Calculate WPM
     if (timePassed > 0) {
@@ -296,13 +355,13 @@ TestResults vowel_run() {
         results.accuracy = (correct * 100) / refLen;
     }
     
-    vowel_displayResults(results);
+    displayResultsVG(results);
     
     // Wait for user choice
     waitForKey();
     
     restoreTerminal();
     clearScreen();
-
+    
     return results;
 }
