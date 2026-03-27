@@ -1,4 +1,0 @@
-Funmode||170||0||0||101
-Fun mode||TimeTest||170 chars
-Fun mode||TimeTest||144 chars
-Fun mode||FallingWords||101
