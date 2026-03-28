@@ -1,0 +1,4 @@
+49||49.00,45.00,42.00||3,1,1,1
+1||SpeedTest||Easy||49||93
+2||SpeedTest||Medium||45||100
+3||SpeedTest||Hard||42||98

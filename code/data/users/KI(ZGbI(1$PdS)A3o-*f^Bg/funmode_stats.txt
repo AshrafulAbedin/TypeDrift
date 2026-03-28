@@ -1,0 +1,4 @@
+Funmode||185||52||16||110
+Fun mode||FallingWords||110
+Fun mode||TimeTest||185 chars
+Fun mode||VowelGame||52||16

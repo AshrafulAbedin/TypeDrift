@@ -1,0 +1,4 @@
+63||63.00,58.00,48.00||3,1,1,1
+1||SpeedTest||Easy||63||97
+2||SpeedTest||Medium||58||95
+3||SpeedTest||Hard||48||91
